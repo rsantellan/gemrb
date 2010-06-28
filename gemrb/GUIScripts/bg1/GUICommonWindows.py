@@ -121,7 +121,7 @@ def SetupMenuWindowControls (Window, Gears, ReturnToGame):
 	# Party mgmt
 	Button = Window.GetControl (8)
 	Button.SetTooltip (16312)
-	Button.SetEvent (IE_GUI_BUTTON_ON_PRESS, OpenPartyWindow)
+	Button.SetEvent (IE_GUI_BUTTON_ON_PRESS, None) #TODO: OpenPartyWindow
 	
 	#gears
 	if Gears:
