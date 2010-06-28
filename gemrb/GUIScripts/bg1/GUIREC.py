@@ -27,6 +27,7 @@ from GUIDefines import *
 from ie_stats import *
 from ie_restype import *
 import LUCommon
+import LevelUp
 import GUIWORLD
 import GUICG19
 
@@ -160,7 +161,7 @@ def UpdateRecordsWindow ():
 
 	# levelup
 	Button = Window.GetControl (37)
-	if CanLevelUp (pc):
+	if LUCommon.CanLevelUp (pc):
 		Button.SetState (IE_GUI_BUTTON_ENABLED)
 	else:
 		Button.SetState (IE_GUI_BUTTON_DISABLED)
