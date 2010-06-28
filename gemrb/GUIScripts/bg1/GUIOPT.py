@@ -40,6 +40,7 @@ import GUISAVE
 from GUIDefines import *
  
 ###################################################
+OptionsWindow = None
 SubOptionsWindow = None
 SubSubOptionsWindow = None
 GameOptionsWindow = None
@@ -70,7 +71,7 @@ def CloseOptionsWindow ():
 	GUICommonWindows.SetSelectionChangeHandler (None)
 	GemRB.SetVar ("OtherWindow", -1)
 	GUICommon.GameWindow.SetVisible(WINDOW_VISIBLE)
-	OptionsWindow = OldOptionsWindow
+	GUICommonWindows.OptionsWindow = OldOptionsWindow
 	OldOptionsWindow = None
 	return
 
@@ -95,7 +96,7 @@ def OpenOptionsWindow ():
 	GameOptionsWindow = Window = GemRB.LoadWindow (2)
 	GemRB.SetVar ("OtherWindow", GameOptionsWindow.ID)
 	if OldOptionsWindow == None:
-		OldOptionsWindow = OptionsWindow
+		OldOptionsWindow = GUICommonWindows.OptionsWindow
 		OptionsWindow = GemRB.LoadWindow (0)
 		GUICommonWindows.SetupMenuWindowControls (OptionsWindow, 0, OpenOptionsWindow)
 		OptionsWindow.SetFrame ()
