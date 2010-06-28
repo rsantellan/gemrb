@@ -22,7 +22,6 @@
 ###################################################
 import GemRB
 import GUICommon
-import GUICommonWindows
 from GUIDefines import *
 from ie_stats import *
 from ie_restype import *
@@ -55,6 +54,7 @@ SoundIndex = 0
 
 ###################################################
 def OpenRecordsWindow ():
+	import GUICommonWindows
 	global RecordsWindow, OptionsWindow
 	global OldOptionsWindow
 
@@ -699,6 +699,7 @@ def OpenInformationWindow ():
 	return
 
 def CloseInformationWindow ():
+	import GUICommonWindows
 	global InformationWindow
 
 	if InformationWindow:
