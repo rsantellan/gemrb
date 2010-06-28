@@ -23,6 +23,7 @@
 #################################################################
 
 import GemRB
+import GUICommon
 import GUICommonWindows
 import GUIClasses
 from GUIDefines import *
