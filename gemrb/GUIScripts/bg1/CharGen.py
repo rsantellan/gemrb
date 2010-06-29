@@ -55,7 +55,7 @@ def init():
 	("accept"	, 8		,11962		),
 	("finish"	, CharGenGui.setAccept	, None 		, None			, None )]
 	
-	CharGenCommon.CharGenMaster = CharGenCommon.CharGen(stages,16575,Imprt)
+	CharGenCommon.CharGenMaster = CharGenCommon.CharGen(stages,16575,CharGenGui.Imprt)
 
 	return
 
