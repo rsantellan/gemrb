@@ -19,7 +19,7 @@
 #character generation, class kit (GUICG22)
 import GemRB
 from GUIDefines import *
-
+from ie_stats import *
 import CharGenCommon
 import GUICommon
 

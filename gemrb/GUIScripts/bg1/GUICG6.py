@@ -19,7 +19,7 @@
 #character generation, skills (GUICG6)
 import GemRB
 from GUIDefines import *
-
+from ie_stats import *
 import CharGenCommon
 import GUICommon
 import LUSkillsSelection

@@ -19,7 +19,7 @@
 #character generation, proficiencies (GUICG9)
 import GemRB
 from GUIDefines import *
-
+from ie_stats import *
 import CharGenCommon
 import LUProfsSelection
 

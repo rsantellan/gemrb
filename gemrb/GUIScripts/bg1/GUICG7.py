@@ -20,6 +20,7 @@
 
 import GemRB
 from GUIDefines import *
+from ie_stats import *
 import LUSpellSelection
 
 def OnLoad():

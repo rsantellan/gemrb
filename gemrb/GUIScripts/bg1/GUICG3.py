@@ -19,7 +19,7 @@
 #character generation, alignment (GUICG3)
 import GemRB
 from GUIDefines import *
-
+from ie_stats import *
 import CharGenCommon
 import GUICommon
 
