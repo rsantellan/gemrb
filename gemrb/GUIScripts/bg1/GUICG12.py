@@ -82,7 +82,7 @@ def OnLoad():
 
 	RightButton.SetEvent (IE_GUI_BUTTON_ON_PRESS, RightPress)
 	LeftButton.SetEvent (IE_GUI_BUTTON_ON_PRESS, LeftPress)
-	BackButton.SetEvent (IE_GUI_BUTTON_ON_PRESS, BackPress)
+	BackButton.SetEvent (IE_GUI_BUTTON_ON_PRESS, CharGenCommon.BackPress)
 	CustomButton.SetEvent (IE_GUI_BUTTON_ON_PRESS, CustomPress)
 	DoneButton.SetEvent (IE_GUI_BUTTON_ON_PRESS, NextPress)
 	
