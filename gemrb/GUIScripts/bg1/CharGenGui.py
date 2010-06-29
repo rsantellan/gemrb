@@ -3,6 +3,7 @@ from GUIDefines import *
 from ie_stats import *
 import CharGenCommon
 import GUICommon
+import LUCommon
 import LUProfsSelection
 
 def Imprt():

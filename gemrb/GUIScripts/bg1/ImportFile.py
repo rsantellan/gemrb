@@ -19,6 +19,7 @@
 #character generation, import (GUICG20)
 import GemRB
 from GUIDefines import *
+import GUICommon
 import CharGenCommon
 
 #import from a character sheet
