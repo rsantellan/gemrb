@@ -102,7 +102,7 @@ def CloseStoreWindow ():
 	GemRB.LeaveStore ()
 	#GUICommonWindows.PortraitWindow = OldPortraitWindow
 	if Inventory:
-		GUIINV.OpenInventoryWindow
+		GUIINV.OpenInventoryWindow ()
 	else:
 		GUICommon.GameWindow.SetVisible(WINDOW_VISIBLE) #enabling the game control screen
 		GemRB.UnhideGUI () #enabling the other windows
