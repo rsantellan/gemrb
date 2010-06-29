@@ -19,7 +19,7 @@
 #character generation, sounds (GUICG19)
 import GemRB
 from GUIDefines import *
-
+from ie_restype import RES_WAV
 import CharGenCommon
 import GUICommon
 

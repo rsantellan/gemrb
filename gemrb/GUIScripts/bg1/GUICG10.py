@@ -19,6 +19,7 @@
 #character generation, multi-class (GUICG10)
 import GemRB
 from GUIDefines import *
+from ie_stats import *
 import GUICommon
 
 import CharGenCommon
