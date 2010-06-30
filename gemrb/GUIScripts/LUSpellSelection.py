@@ -409,7 +409,13 @@ def SpellsCancelPress ():
 	# unload teh window and go back
 	if SpellsWindow:
 		SpellsWindow.Unload()
-	GemRB.SetNextScript("CharGen6") #haterace
+	if GUICommon.GameIsBG2():
+		GemRB.SetNextScript("CharGen6") #haterace
+	elif GUICommon.GameIsBG1():
+		import CharGenCommon
+		CharGenCommon.BackPress()
+	else:
+		print "Uh-oh in SpellsCancelPress in", GemRB.GameType
 	return
 
 def SpellsPickPress ():
