@@ -21,6 +21,7 @@ import GemRB
 from math import ceil
 from GUIDefines import *
 from ie_stats import *
+from ie_restype import RES_BAM
 import GUICommon
 
 # storage variables
@@ -170,7 +171,9 @@ def OpenSpellsWindow (actor, table, level, diff, kit=0, gen=0, recommend=True):
 			if(EnhanceGUI):
 				# setup the scrollbar
 				ScrollBar = SpellsWindow.GetControl (1000)
-				ScrollBar.SetSprites ("GUISCRCW", 0, 0,1,2,3,5,4)
+				#FIXME: use other resources instead, this one is bg2-only
+				if GemRB.HasResource ("GUISCRCW", RES_BAM):
+					ScrollBar.SetSprites ("GUISCRCW", 0, 0,1,2,3,5,4)
 				ScrollBar.SetEvent (IE_GUI_SCROLLBAR_ON_CHANGE, ShowSpells)
 				ScrollBar.SetDefaultScrollBar ()
 
