@@ -406,10 +406,10 @@ def SpellsCancelPress ():
 	# remove all learned spells
 	GUICommon.RemoveKnownSpells (pc, IE_SPELL_TYPE_WIZARD, 1, 9, 1)
 
-	# unload teh window and go back
-	if SpellsWindow:
-		SpellsWindow.Unload()
 	if GUICommon.GameIsBG2():
+		# unload teh window and go back
+		if SpellsWindow:
+			SpellsWindow.Unload()
 		GemRB.SetNextScript("CharGen6") #haterace
 	elif GUICommon.GameIsBG1():
 		import CharGenCommon
