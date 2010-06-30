@@ -99,10 +99,7 @@ def OpenSpellsWindow (actor, table, level, diff, kit=0, gen=0, recommend=True):
 		# cancel button only applicable for chargen
 		SpellsCancelButton = SpellsWindow.GetControl(29)
 		SpellsCancelButton.SetState(IE_GUI_BUTTON_ENABLED)
-		if recommend:
-			SpellsCancelButton.SetEvent(IE_GUI_BUTTON_ON_PRESS, SpellsCancelPress)
-		else:
-			SpellsCancelButton.SetEventByName(IE_GUI_BUTTON_ON_PRESS, "BackPress")
+		SpellsCancelButton.SetEvent(IE_GUI_BUTTON_ON_PRESS, SpellsCancelPress)
 		SpellsCancelButton.SetText(13727)
 		SpellsCancelButton.SetFlags (IE_GUI_BUTTON_CANCEL, OP_OR)
 
