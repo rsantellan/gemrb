@@ -491,7 +491,7 @@ void DisplayStringCore(Scriptable* const Sender, int Strref, int flags)
 				if(flags&DS_NONAME) {
 					displaymsg->DisplayString(*sb.text);
 				} else {
-					displaymsg->DisplayStringName( Strref, DMC_WHITE, Sender, 0);
+					displaymsg->DisplayStringName( Strref, gamedata->GetColor("DMC_WHITE"), Sender, 0);
 				}
 			}
 			if (flags & (DS_HEAD | DS_AREA)) {
@@ -667,7 +667,7 @@ int MoveItemCore(Scriptable *Sender, Scriptable *target, const char *resref, int
 			myinv = NULL;
 			break;
 	}
-	if (lostitem&&!gotitem) displaymsg->DisplayConstantString(STR_LOSTITEM, DMC_BG2XPGREEN);
+	if (lostitem&&!gotitem) displaymsg->DisplayConstantString(STR_LOSTITEM, gamedata->GetColor("DMC_BG2XPGREEN"));
 
 	if (!myinv) {
 		delete item;
@@ -680,11 +680,11 @@ int MoveItemCore(Scriptable *Sender, Scriptable *target, const char *resref, int
 			if (target->Type == ST_ACTOR && ((Actor *) target)->InParty) {
 				((Actor *) target)->VerbalConstant(VB_INVENTORY_FULL);
 			}
-			displaymsg->DisplayConstantString(STR_INVFULL_ITEMDROP, DMC_BG2XPGREEN);
+			displaymsg->DisplayConstantString(STR_INVFULL_ITEMDROP, gamedata->GetColor("DMC_BG2XPGREEN"));
 		}
 		return MIC_FULL;
 	}
-	if (gotitem&&!lostitem) displaymsg->DisplayConstantString(STR_GOTITEM, DMC_BG2XPGREEN);
+	if (gotitem&&!lostitem) displaymsg->DisplayConstantString(STR_GOTITEM, gamedata->GetColor("DMC_BG2XPGREEN"));
 	return MIC_GOTITEM;
 }
 
@@ -1206,7 +1206,7 @@ void BeginDialog(Scriptable* Sender, const Action* parameters, int Flags)
 	if ((speaker != target) && (target->GetInternalFlag()&IF_NOINT) && \
 	  (!curact && target->GetNextAction())) {
 		core->GetTokenDictionary()->SetAtCopy("TARGET", target->GetName(1));
-		displaymsg->DisplayConstantString(STR_TARGETBUSY, DMC_RED);
+		displaymsg->DisplayConstantString(STR_TARGETBUSY, gamedata->GetColor("DMC_RED"));
 		Sender->ReleaseCurrentAction();
 		return;
 	}
@@ -1220,7 +1220,7 @@ void BeginDialog(Scriptable* Sender, const Action* parameters, int Flags)
 			// added CurrentAction as part of blocking action fixes
 			if (tar->GetCurrentAction() || tar->GetNextAction()) {
 				core->GetTokenDictionary()->SetAtCopy("TARGET", target->GetName(1));
-				displaymsg->DisplayConstantString(STR_TARGETBUSY, DMC_RED);
+				displaymsg->DisplayConstantString(STR_TARGETBUSY, gamedata->GetColor("DMC_RED"));
 				Sender->ReleaseCurrentAction();
 				return;
 			}
@@ -1278,7 +1278,7 @@ void BeginDialog(Scriptable* Sender, const Action* parameters, int Flags)
 	core->GetDictionary()->SetAt("DialogChoose",(ieDword) -1);
 	if (!gc->dialoghandler->InitDialog(scr, tar, Dialog)) {
 		if (!(Flags & BD_NOEMPTY)) {
-			displaymsg->DisplayConstantStringName(STR_NOTHINGTOSAY, DMC_RED, tar);
+			displaymsg->DisplayConstantStringName(STR_NOTHINGTOSAY, gamedata->GetColor("DMC_RED"), tar);
 		}
 	}
 
@@ -1497,7 +1497,7 @@ void AttackCore(Scriptable *Sender, Scriptable *target, int flags)
 		}
 		//display attack message
 		if (target->GetGlobalID() != Sender->LastTarget) {
-			displaymsg->DisplayConstantStringAction(STR_ACTION_ATTACK, DMC_WHITE, Sender, target);
+			displaymsg->DisplayConstantStringAction(STR_ACTION_ATTACK, gamedata->GetColor("DMC_WHITE"), Sender, target);
 		}
 	}
 
@@ -2599,9 +2599,9 @@ static bool InterruptSpellcasting(Scriptable* Sender) {
 	// ouch, we got hit
 	if (Sender->InterruptCasting) {
 		if (caster->InParty) {
-			displaymsg->DisplayConstantString(STR_SPELLDISRUPT, DMC_WHITE, Sender);
+			displaymsg->DisplayConstantString(STR_SPELLDISRUPT, gamedata->GetColor("DMC_WHITE"), Sender);
 		} else {
-			displaymsg->DisplayConstantStringName(STR_SPELL_FAILED, DMC_WHITE, Sender);
+			displaymsg->DisplayConstantStringName(STR_SPELL_FAILED, gamedata->GetColor("DMC_WHITE"), Sender);
 		}
 		DisplayStringCore(Sender, VB_SPELL_DISRUPTED, DS_CONSOLE|DS_CONST );
 		return true;
@@ -2894,7 +2894,7 @@ void AddXPCore(const Action *parameters, bool divide)
 	}
 
 	if (parameters->int0Parameter > 0 && core->HasFeedback(FT_MISC)) {
-		displaymsg->DisplayString(parameters->int0Parameter, DMC_BG2XPGREEN, IE_STR_SOUND);
+		displaymsg->DisplayString(parameters->int0Parameter, gamedata->GetColor("DMC_BG2XPGREEN"), IE_STR_SOUND);
 	}
 	if (!xptable) {
 		Log(ERROR, "GameScript", "Can't perform AddXP2DA/AddXPVar!");

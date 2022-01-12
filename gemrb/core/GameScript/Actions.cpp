@@ -2248,7 +2248,7 @@ void GameScript::NIDSpecial2(Scriptable* Sender, Action* /*parameters*/)
 	if (!game->EveryoneNearPoint(map, actor->Pos, ENP_CANMOVE)) {
 		//we abort the command, everyone should be here
 		if (map->LastGoCloser < game->Ticks) {
-			displaymsg->DisplayConstantString(STR_WHOLEPARTY, DMC_WHITE);
+			displaymsg->DisplayConstantString(STR_WHOLEPARTY, gamedata->GetColor("DMC_WHITE"));
 			map->LastGoCloser = game->Ticks + 6000;
 		}
 		Sender->ReleaseCurrentAction();
@@ -2660,7 +2660,7 @@ void GameScript::ToggleDoor(Scriptable* Sender, Action* /*parameters*/)
 	if (distance <= MAX_OPERATING_DISTANCE) {
 		actor->SetOrientation( GetOrient( *otherp, actor->Pos ), false);
 		if (!door->TryUnlock(actor)) {
-			displaymsg->DisplayConstantString(STR_DOORLOCKED, DMC_LIGHTGREY, door);
+			displaymsg->DisplayConstantString(STR_DOORLOCKED, gamedata->GetColor("DMC_LIGHTGREY"), door);
 			door->AddTrigger(TriggerEntry(trigger_failedtoopen, actor->GetGlobalID()));
 
 			//playsound unsuccessful opening of door
@@ -2952,9 +2952,9 @@ void GameScript::AddXPObject(Scriptable* Sender, Action* parameters)
 	core->GetTokenDictionary()->SetAtCopy("EXPERIENCEAMOUNT", xp);
 	if (core->HasFeedback(FT_MISC)) {
 		if (displaymsg->HasStringReference(STR_GOTQUESTXP)) {
-			displaymsg->DisplayConstantStringName(STR_GOTQUESTXP, DMC_BG2XPGREEN, actor);
+			displaymsg->DisplayConstantStringName(STR_GOTQUESTXP, gamedata->GetColor("DMC_BG2XPGREEN"), actor);
 		} else {
-			displaymsg->DisplayConstantStringValue(STR_GOTXP, DMC_BG2XPGREEN, (ieDword)xp);
+			displaymsg->DisplayConstantStringValue(STR_GOTXP, gamedata->GetColor("DMC_BG2XPGREEN"), (ieDword)xp);
 		}
 	}
 
@@ -4024,7 +4024,7 @@ void GameScript::RemovePaladinHood(Scriptable* Sender, Action* /*parameters*/)
 	act->fxqueue.AddEffect(fx, false);
 	fx = EffectQueue::CreateEffect(fx_disable_button_ref, 0, ACT_CAST, FX_DURATION_INSTANT_PERMANENT);
 	act->fxqueue.AddEffect(fx, false);
-	if (act->InParty && core->HasFeedback(FT_STATES)) displaymsg->DisplayConstantStringName(STR_PALADIN_FALL, DMC_BG2XPGREEN, act);
+	if (act->InParty && core->HasFeedback(FT_STATES)) displaymsg->DisplayConstantStringName(STR_PALADIN_FALL, gamedata->GetColor("DMC_BG2XPGREEN"), act);
 }
 
 void GameScript::RemoveRangerHood(Scriptable* Sender, Action* /*parameters*/)
@@ -4039,7 +4039,7 @@ void GameScript::RemoveRangerHood(Scriptable* Sender, Action* /*parameters*/)
 	act->fxqueue.AddEffect(fx, false);
 	fx = EffectQueue::CreateEffect(fx_disable_button_ref, 0, ACT_CAST, FX_DURATION_INSTANT_PERMANENT);
 	act->fxqueue.AddEffect(fx, false);
-	if (act->InParty && core->HasFeedback(FT_STATES)) displaymsg->DisplayConstantStringName(STR_RANGER_FALL, DMC_BG2XPGREEN, act);
+	if (act->InParty && core->HasFeedback(FT_STATES)) displaymsg->DisplayConstantStringName(STR_RANGER_FALL, gamedata->GetColor("DMC_BG2XPGREEN"), act);
 }
 
 void GameScript::RegainPaladinHood(Scriptable* Sender, Action* /*parameters*/)
@@ -4176,10 +4176,10 @@ void GameScript::CreateItem(Scriptable *Sender, Action* parameters)
 		map->AddItemToLocation(tar->Pos, item);
 		if (act->InParty) {
 			act->VerbalConstant(VB_INVENTORY_FULL);
-			if (core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_INVFULL_ITEMDROP, DMC_BG2XPGREEN);
+			if (core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_INVFULL_ITEMDROP, gamedata->GetColor("DMC_BG2XPGREEN"));
 		}
 	} else {
-		if (act->InParty && core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_GOTITEM, DMC_BG2XPGREEN);
+		if (act->InParty && core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_GOTITEM, gamedata->GetColor("DMC_BG2XPGREEN"));
 	}
 }
 
@@ -4215,10 +4215,10 @@ void GameScript::CreateItemNumGlobal(Scriptable *Sender, Action* parameters)
 		map->AddItemToLocation(Sender->Pos, item);
 		if (act->InParty) {
 			act->VerbalConstant(VB_INVENTORY_FULL);
-			if (core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_INVFULL_ITEMDROP, DMC_BG2XPGREEN);
+			if (core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_INVFULL_ITEMDROP, gamedata->GetColor("DMC_BG2XPGREEN"));
 		}
 	} else {
-		if (act->InParty && core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_GOTITEM, DMC_BG2XPGREEN);
+		if (act->InParty && core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_GOTITEM, gamedata->GetColor("DMC_BG2XPGREEN"));
 	}
 }
 
@@ -4558,7 +4558,7 @@ void GameScript::PickPockets(Scriptable *Sender, Action* parameters)
 	}
 
 	if (scr->GetStat(IE_EA)>EA_EVILCUTOFF) {
-		if (core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_PICKPOCKET_EVIL, DMC_WHITE);
+		if (core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_PICKPOCKET_EVIL, gamedata->GetColor("DMC_WHITE"));
 		Sender->ReleaseCurrentAction();
 		return;
 	}
@@ -4572,7 +4572,7 @@ void GameScript::PickPockets(Scriptable *Sender, Action* parameters)
 		int level = scr->GetXPLevel(true);
 		int wismod = scr->GetAbilityBonus(IE_WIS);
 		// ~Pick pocket check. (10 + skill w/Dex bonus) %d vs. ((d20 + target's level) + Wisdom modifier) %d + %d.~
-		displaymsg->DisplayRollStringName(39302, DMC_LIGHTGREY, snd, 10+skill, roll+level, wismod);
+		displaymsg->DisplayRollStringName(39302, gamedata->GetColor("DMC_LIGHTGREY"), snd, 10+skill, roll+level, wismod);
 		check = (10 + skill) > (roll + level + wismod);
 		if (skill == 0) { // a trained skill, make sure we fail
 			check = 1;
@@ -4591,7 +4591,7 @@ void GameScript::PickPockets(Scriptable *Sender, Action* parameters)
 	}
 	if (check) {
 		//noticed attempt
-		if (core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_PICKPOCKET_FAIL, DMC_WHITE);
+		if (core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_PICKPOCKET_FAIL, gamedata->GetColor("DMC_WHITE"));
 		if (core->HasFeature(GF_STEAL_IS_ATTACK) ) {
 			scr->AttackedBy(snd);
 		} else {
@@ -4623,7 +4623,7 @@ void GameScript::PickPockets(Scriptable *Sender, Action* parameters)
 		}
 		if (!money) {
 			//no stuff to steal
-			if (core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_PICKPOCKET_NONE, DMC_WHITE);
+			if (core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_PICKPOCKET_NONE, gamedata->GetColor("DMC_WHITE"));
 			Sender->ReleaseCurrentAction();
 			return;
 		}
@@ -4639,11 +4639,11 @@ void GameScript::PickPockets(Scriptable *Sender, Action* parameters)
 		}
 	}
 
-	if (core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_PICKPOCKET_DONE, DMC_WHITE);
+	if (core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_PICKPOCKET_DONE, gamedata->GetColor("DMC_WHITE"));
 	DisplayStringCore(snd, VB_PP_SUCC, DS_CONSOLE|DS_CONST );
 	if (ret == MIC_FULL && snd->InParty) {
 		snd->VerbalConstant(VB_INVENTORY_FULL);
-		if (core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_INVFULL_ITEMDROP, DMC_BG2XPGREEN);
+		if (core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_INVFULL_ITEMDROP, gamedata->GetColor("DMC_BG2XPGREEN"));
 	}
 	Sender->ReleaseCurrentAction();
 }
@@ -4948,7 +4948,7 @@ void GameScript::RevealAreaOnMap(Scriptable* /*Sender*/, Action* parameters)
 	}
 	// WMP_ENTRY_ADJACENT because otherwise revealed bg2 areas are unreachable from city gates
 	worldmap->SetAreaStatus(parameters->string0Parameter, WMP_ENTRY_VISIBLE|WMP_ENTRY_ADJACENT, BitOp::OR);
-	displaymsg->DisplayConstantString(STR_WORLDMAPCHANGE, DMC_BG2XPGREEN);
+	displaymsg->DisplayConstantString(STR_WORLDMAPCHANGE, gamedata->GetColor("DMC_BG2XPGREEN"));
 }
 
 void GameScript::HideAreaOnMap( Scriptable* /*Sender*/, Action* parameters)
@@ -5653,7 +5653,7 @@ void GameScript::UseContainer(Scriptable* Sender, Action* parameters)
 		if (!container->TryUnlock(actor)) {
 			//playsound can't open container
 			//display string, etc
-			if (core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_CONTLOCKED, DMC_LIGHTGREY, container);
+			if (core->HasFeedback(FT_MISC)) displaymsg->DisplayConstantString(STR_CONTLOCKED, gamedata->GetColor("DMC_LIGHTGREY"), container);
 			Sender->ReleaseCurrentAction();
 			return;
 		}
@@ -5933,7 +5933,7 @@ void GameScript::ExportParty(Scriptable* /*Sender*/, Action* parameters)
 		snprintf(FileName,_MAX_PATH,"%s%d",parameters->string0Parameter,i+1);
 		core->WriteCharacter(FileName, actor);
 	}
-	displaymsg->DisplayConstantString(STR_EXPORTED, DMC_BG2XPGREEN);
+	displaymsg->DisplayConstantString(STR_EXPORTED, gamedata->GetColor("DMC_BG2XPGREEN"));
 }
 
 void GameScript::SaveGame(Scriptable* /*Sender*/, Action* parameters)
@@ -6269,7 +6269,7 @@ void GameScript::PauseGame(Scriptable* Sender, Action* /*parameters*/)
 	GameControl *gc = core->GetGameControl();
 	if (gc) {
 		gc->SetDialogueFlags(DF_FREEZE_SCRIPTS, BitOp::OR);
-		displaymsg->DisplayConstantString(STR_SCRIPTPAUSED, DMC_RED);
+		displaymsg->DisplayConstantString(STR_SCRIPTPAUSED, gamedata->GetColor("DMC_RED"));
 	}
 	// releasing this action allows actions to continue executing,
 	// so we force a wait

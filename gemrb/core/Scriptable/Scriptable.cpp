@@ -901,7 +901,7 @@ void Scriptable::DisplaySpellCastMessage(ieDword tgt, const Spell *spl)
 		} else {
 			swprintf(str, sizeof(str)/sizeof(str[0]), L"%ls : %s", spell->c_str(), GetName(-1));
 		}
-		displaymsg->DisplayStringName(str, DMC_WHITE, this);
+		displaymsg->DisplayStringName(str, gamedata->GetColor("DMC_WHITE"), this);
 	}
 	delete spell;
 }
@@ -1095,12 +1095,12 @@ int Scriptable::CanCast(const ResRef& SpellRef, bool verbose) {
 	// check for area dead magic
 	// tob AR3004 is a dead magic area, but using a script with personal dead magic
 	if (area->GetInternalFlag()&AF_DEADMAGIC && !(spl->Flags&SF_HLA)) {
-		displaymsg->DisplayConstantStringName(STR_DEADMAGIC_FAIL, DMC_WHITE, this);
+		displaymsg->DisplayConstantStringName(STR_DEADMAGIC_FAIL, gamedata->GetColor("DMC_WHITE"), this);
 		return 0;
 	}
 
 	if (spl->Flags&SF_NOT_INDOORS && !(area->AreaType&AT_OUTDOOR)) {
-		displaymsg->DisplayConstantStringName(STR_INDOOR_FAIL, DMC_WHITE, this);
+		displaymsg->DisplayConstantStringName(STR_INDOOR_FAIL, gamedata->GetColor("DMC_WHITE"), this);
 		return 0;
 	}
 
@@ -1123,7 +1123,7 @@ int Scriptable::CanCast(const ResRef& SpellRef, bool verbose) {
 
 	// check for personal dead magic
 	if (actor->Modified[IE_DEADMAGIC] && !(spl->Flags&SF_HLA)) {
-		displaymsg->DisplayConstantStringName(STR_DEADMAGIC_FAIL, DMC_WHITE, this);
+		displaymsg->DisplayConstantStringName(STR_DEADMAGIC_FAIL, gamedata->GetColor("DMC_WHITE"), this);
 		return 0;
 	}
 
@@ -1148,10 +1148,10 @@ int Scriptable::CanCast(const ResRef& SpellRef, bool verbose) {
 	}
 	if (verbose && chance && third) {
 		// ~Spell Failure check: Roll d100 %d vs. Spell failure chance %d~
-		displaymsg->DisplayRollStringName(40955, DMC_LIGHTGREY, actor, roll, chance);
+		displaymsg->DisplayRollStringName(40955, gamedata->GetColor("DMC_LIGHTGREY"), actor, roll, chance);
 	}
 	if (failed) {
-		displaymsg->DisplayConstantStringName(STR_MISCASTMAGIC, DMC_WHITE, this);
+		displaymsg->DisplayConstantStringName(STR_MISCASTMAGIC, gamedata->GetColor("DMC_WHITE"), this);
 		return 0;
 	}
 
@@ -1200,7 +1200,7 @@ void Scriptable::SpellcraftCheck(const Actor *caster, const ResRef& spellRef)
 			delete spellname;
 
 			SetOverheadText(tmpstr);
-			displaymsg->DisplayRollStringName(39306, DMC_LIGHTGREY, detective, Spellcraft+IntMod, AdjustedSpellLevel, IntMod);
+			displaymsg->DisplayRollStringName(39306, gamedata->GetColor("DMC_LIGHTGREY"), detective, Spellcraft+IntMod, AdjustedSpellLevel, IntMod);
 			break;
 		}
 	}
@@ -1445,7 +1445,7 @@ int Scriptable::CheckWildSurge()
 			//avert the surge and decrease the chaos shield counter
 			check = 0;
 			caster->fxqueue.DecreaseParam1OfEffect(fx_chaosshield_ref,1);
-			displaymsg->DisplayConstantStringName(STR_CHAOSSHIELD,DMC_LIGHTGREY,caster);
+			displaymsg->DisplayConstantStringName(STR_CHAOSSHIELD,gamedata->GetColor("DMC_LIGHTGREY"),caster);
 		}
 
 		// hundred or more means a normal cast; same for negative values (for absurd antisurge modifiers)
@@ -1453,7 +1453,7 @@ int Scriptable::CheckWildSurge()
 			// display feedback: Wild Surge: bla bla
 			String* s1 = core->GetString(displaymsg->GetStringReference(STR_WILDSURGE), 0);
 			String* s2 = core->GetString(core->SurgeSpells[check-1].message, 0);
-			displaymsg->DisplayStringName(*s1 + L" " + *s2, DMC_WHITE, this);
+			displaymsg->DisplayStringName(*s1 + L" " + *s2, gamedata->GetColor("DMC_WHITE"), this);
 			delete s1;
 			delete s2;
 
@@ -1608,7 +1608,7 @@ bool Scriptable::AuraPolluted()
 		const Actor *act = (const Actor *) this;
 		if (act->GetStat(IE_AURACLEANSING)) {
 			AuraTicks = -1;
-			if (core->HasFeedback(FT_STATES)) displaymsg->DisplayConstantStringName(STR_AURACLEANSED, DMC_WHITE, this);
+			if (core->HasFeedback(FT_STATES)) displaymsg->DisplayConstantStringName(STR_AURACLEANSED, gamedata->GetColor("DMC_WHITE"), this);
 			return false;
 		}
 	}
@@ -1887,7 +1887,7 @@ void Highlightable::DetectTrap(int skill, ieDword actorID)
 		int bonus = 0;
 		if (detective) {
 			bonus = detective->GetAbilityBonus(IE_INT);
-			displaymsg->DisplayRollStringName(39303, DMC_LIGHTGREY, detective, skill-bonus, TrapDetectionDiff, bonus);
+			displaymsg->DisplayRollStringName(39303, gamedata->GetColor("DMC_LIGHTGREY"), detective, skill-bonus, TrapDetectionDiff, bonus);
 		}
 		check = (skill + bonus)*7;
 	} else {

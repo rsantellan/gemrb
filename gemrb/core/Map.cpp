@@ -616,7 +616,7 @@ void Map::UseExit(Actor *actor, InfoPoint *ip)
 	switch(EveryOne) {
 	case CT_GO_CLOSER:
 		if (LastGoCloser<game->Ticks) {
-			displaymsg->DisplayConstantString(STR_WHOLEPARTY, DMC_WHITE); //white
+			displaymsg->DisplayConstantString(STR_WHOLEPARTY, gamedata->GetColor("DMC_WHITE")); //white
 			LastGoCloser = game->Ticks+6000;
 		}
 		if (game->EveryoneStopped()) {
@@ -3386,7 +3386,7 @@ int Map::CheckRestInterruptsAndPassTime(const Point &pos, int hours, int day)
 				continue;
 			}
 
-			displaymsg->DisplayString( RestHeader.Strref[idx], DMC_GOLD, IE_STR_SOUND );
+			displaymsg->DisplayString( RestHeader.Strref[idx], gamedata->GetColor("DMC_GOLD"), IE_STR_SOUND );
 			while (spawnamount > 0 && spawncount < RestHeader.Maximum) {
 				if (!SpawnCreature(pos, RestHeader.CreResRef[idx], 20, 20, RestHeader.rwdist, &spawnamount, &spawncount)) {
 					break;
@@ -3823,16 +3823,16 @@ bool Map::DisplayTrackString(const Actor *target) const
 		success = core->Roll(1, 100, trackDiff) > skill;
 	}
 	if (!success) {
-		displaymsg->DisplayConstantStringName(STR_TRACKINGFAILED, DMC_LIGHTGREY, target);
+		displaymsg->DisplayConstantStringName(STR_TRACKINGFAILED, gamedata->GetColor("DMC_LIGHTGREY"), target);
 		return true;
 	}
 	if (trackFlag) {
 			char * str = core->GetCString( trackString);
 			core->GetTokenDictionary()->SetAt( "CREATURE", str);
-			displaymsg->DisplayConstantStringName(STR_TRACKING, DMC_LIGHTGREY, target);
+			displaymsg->DisplayConstantStringName(STR_TRACKING, gamedata->GetColor("DMC_LIGHTGREY"), target);
 			return false;
 	}
-	displaymsg->DisplayStringName(trackString, DMC_LIGHTGREY, target, 0);
+	displaymsg->DisplayStringName(trackString, gamedata->GetColor("DMC_LIGHTGREY"), target, 0);
 	return false;
 }
 

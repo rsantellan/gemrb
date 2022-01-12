@@ -2216,7 +2216,7 @@ Actor *Interface::SummonCreature(const ResRef& resource, const ResRef& animRes, 
 		int limit = gamedata->GetSummoningLimit(sex);
 		if (limit && sexmod && map->CountSummons(flag, sex) >= limit && summoner && summoner->InParty) {
 			//summoning limit reached
-			displaymsg->DisplayConstantString(STR_SUMMONINGLIMIT, DMC_WHITE);
+			displaymsg->DisplayConstantString(STR_SUMMONINGLIMIT, gamedata->GetColor("DMC_WHITE"));
 			delete tmp;
 			break;
 		}
@@ -3400,14 +3400,14 @@ int Interface::CanUseItemType(int slottype, const Item *item, const Actor *actor
 		}
 		if (slottype&SLOT_SHIELD) {
 			//cannot equip twohanded in offhand
-			if (feedback) displaymsg->DisplayConstantString(STR_NOT_IN_OFFHAND, DMC_WHITE);
+			if (feedback) displaymsg->DisplayConstantString(STR_NOT_IN_OFFHAND, gamedata->GetColor("DMC_WHITE"));
 			return 0;
 		}
 	}
 
 	if ( (unsigned int) item->ItemType>=(unsigned int) ItemTypes) {
 		//invalid itemtype
-		if (feedback) displaymsg->DisplayConstantString(STR_WRONGITEMTYPE, DMC_WHITE);
+		if (feedback) displaymsg->DisplayConstantString(STR_WRONGITEMTYPE, gamedata->GetColor("DMC_WHITE"));
 		return 0;
 	}
 
@@ -3416,13 +3416,13 @@ int Interface::CanUseItemType(int slottype, const Item *item, const Actor *actor
 		//constant strings
 		int idx = actor->Unusable(item);
 		if (idx) {
-			if (feedback) displaymsg->DisplayConstantString(idx, DMC_WHITE);
+			if (feedback) displaymsg->DisplayConstantString(idx, gamedata->GetColor("DMC_WHITE"));
 			return 0;
 		}
 		//custom strings
 		ieStrRef str = actor->Disabled(item->Name, item->ItemType);
 		if (str && !equipped) {
-			if (feedback) displaymsg->DisplayString(str, DMC_WHITE, 0);
+			if (feedback) displaymsg->DisplayString(str, gamedata->GetColor("DMC_WHITE"), 0);
 			return 0;
 		}
 	}
@@ -3435,7 +3435,7 @@ int Interface::CanUseItemType(int slottype, const Item *item, const Actor *actor
 	}
 
 	if (!ret) {
-		if (feedback) displaymsg->DisplayConstantString(STR_WRONGITEMTYPE, DMC_WHITE);
+		if (feedback) displaymsg->DisplayConstantString(STR_WRONGITEMTYPE, gamedata->GetColor("DMC_WHITE"));
 		return 0;
 	}
 
@@ -3468,7 +3468,7 @@ int Interface::CanUseItemType(int slottype, const Item *item, const Actor *actor
 	}
 
 	if (!flg) {
-		displaymsg->DisplayConstantString(STR_UNUSABLEITEM, DMC_WHITE);
+		displaymsg->DisplayConstantString(STR_UNUSABLEITEM, gamedata->GetColor("DMC_WHITE"));
 		return 0;
 	}
 
@@ -4479,7 +4479,7 @@ bool Interface::SetPause(PauseSetting pause, int flags) const
 		}
 		if (!(flags&PF_QUIET) ) {
 			if (pause) gc->SetDisplayText(strref, 0); // time 0 = removed instantly on unpause (for pst)
-			displaymsg->DisplayConstantString(strref, DMC_RED);
+			displaymsg->DisplayConstantString(strref, gamedata->GetColor("DMC_RED"));
 		}
 		return true;
 	}
@@ -4499,7 +4499,7 @@ bool Interface::Autopause(ieDword flag, Scriptable* target) const
 		return false;
 	}
 
-	displaymsg->DisplayConstantString(STR_AP_UNUSABLE + flag, DMC_RED);
+	displaymsg->DisplayConstantString(STR_AP_UNUSABLE + flag, gamedata->GetColor("DMC_RED"));
 
 	ieDword centerOnAutoPause = 0;
 	vars->Lookup("Auto Pause Center", centerOnAutoPause);

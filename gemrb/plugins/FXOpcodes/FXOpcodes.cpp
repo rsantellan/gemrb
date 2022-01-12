@@ -1195,14 +1195,14 @@ int fx_set_charmed_state (Scriptable* Owner, Actor* target, Effect* fx)
 	switch (fx->Parameter2) {
 	case 0: //charmed (target neutral after charm)
 		if (fx->FirstApply) {
-			displaymsg->DisplayConstantStringName(STR_CHARMED, DMC_WHITE, target);
+			displaymsg->DisplayConstantStringName(STR_CHARMED, gamedata->GetColor("DMC_WHITE"), target);
 		}
 		// intentional fallthrough
 	case 1000:
 		break;
 	case 1: //charmed (target hostile after charm)
 		if (fx->FirstApply) {
-			displaymsg->DisplayConstantStringName(STR_CHARMED, DMC_WHITE, target);
+			displaymsg->DisplayConstantStringName(STR_CHARMED, gamedata->GetColor("DMC_WHITE"), target);
 		}
 		// intentional fallthrough
 	case 1001:
@@ -1212,14 +1212,14 @@ int fx_set_charmed_state (Scriptable* Owner, Actor* target, Effect* fx)
 		break;
 	case 2: //dire charmed (target neutral after charm)
 		if (fx->FirstApply) {
-			displaymsg->DisplayConstantStringName(STR_DIRECHARMED, DMC_WHITE, target);
+			displaymsg->DisplayConstantStringName(STR_DIRECHARMED, gamedata->GetColor("DMC_WHITE"), target);
 		}
 		// intentional fallthrough
 	case 1002:
 		break;
 	case 3: //dire charmed (target hostile after charm)
 		if (fx->FirstApply) {
-			displaymsg->DisplayConstantStringName(STR_DIRECHARMED, DMC_WHITE, target);
+			displaymsg->DisplayConstantStringName(STR_DIRECHARMED, gamedata->GetColor("DMC_WHITE"), target);
 		}
 		// intentional fallthrough
 	case 1003:
@@ -1229,7 +1229,7 @@ int fx_set_charmed_state (Scriptable* Owner, Actor* target, Effect* fx)
 		break;
 	case 4: //controlled by cleric
 		if (fx->FirstApply) {
-			displaymsg->DisplayConstantStringName(STR_CONTROLLED, DMC_WHITE, target);
+			displaymsg->DisplayConstantStringName(STR_CONTROLLED, gamedata->GetColor("DMC_WHITE"), target);
 		}
 		// intentional fallthrough
 	case 1004:
@@ -1240,7 +1240,7 @@ int fx_set_charmed_state (Scriptable* Owner, Actor* target, Effect* fx)
 		break;
 	case 5: //thrall (typo comes from original engine doc)
 		if (fx->FirstApply) {
-			displaymsg->DisplayConstantStringName(STR_CHARMED, DMC_WHITE, target);
+			displaymsg->DisplayConstantStringName(STR_CHARMED, gamedata->GetColor("DMC_WHITE"), target);
 		}
 		// intentional fallthrough
 	case 1005:
@@ -1886,7 +1886,7 @@ int fx_set_poisoned_state (Scriptable* /*Owner*/, Actor* target, Effect* fx)
 		target->SetSpellState(SS_HELD);
 		STATE_SET(STATE_HELPLESS);
 		if (fx->FirstApply) {
-			displaymsg->DisplayConstantStringName(STR_HELD, DMC_WHITE, target);
+			displaymsg->DisplayConstantStringName(STR_HELD, gamedata->GetColor("DMC_WHITE"), target);
 		}
 		break;
 	case RPD_7:
@@ -3515,7 +3515,7 @@ int fx_create_magic_item (Scriptable* /*Owner*/, Actor* target, Effect* fx)
 		if (target->inventory.GetItemFlag(slot)&IE_ITEM_TWO_HANDED) {
 			if (target->inventory.HasItemInSlot("",target->inventory.GetShieldSlot())) {
 				target->inventory.RemoveItem(slot);
-				displaymsg->DisplayConstantStringNameString(STR_SPELL_FAILED, DMC_WHITE, STR_OFFHAND_USED, target);
+				displaymsg->DisplayConstantStringNameString(STR_SPELL_FAILED, gamedata->GetColor("DMC_WHITE"), STR_OFFHAND_USED, target);
 				return FX_NOT_APPLIED;
 			}
 		}
@@ -4324,7 +4324,7 @@ int fx_display_string (Scriptable* /*Owner*/, Actor* target, Effect* fx)
 	}
 
 	if (!target->fxqueue.HasEffectWithParamPair(fx_protection_from_display_string_ref, fx->Parameter1, 0) ) {
-		displaymsg->DisplayStringName(fx->Parameter1, DMC_WHITE, target, IE_STR_SOUND|IE_STR_SPEECH);
+		displaymsg->DisplayStringName(fx->Parameter1, gamedata->GetColor("DMC_WHITE"), target, IE_STR_SOUND|IE_STR_SPEECH);
 	}
 	return FX_NOT_APPLIED;
 }
@@ -4498,7 +4498,7 @@ int fx_disable_spellcasting (Scriptable* /*Owner*/, Actor* target, Effect* fx)
 		}
 	}
 	if (fx->FirstApply && target->GetStat(IE_EA) < EA_CONTROLLABLE) {
-		if (display_warning) displaymsg->DisplayConstantStringName(STR_DISABLEDMAGE, DMC_RED, target);
+		if (display_warning) displaymsg->DisplayConstantStringName(STR_DISABLEDMAGE, gamedata->GetColor("gamedata->GetColor("DMC_RED")"), target);
 		core->SetEventFlag(EF_ACTION);
 	}
 	return FX_APPLIED;
@@ -5383,13 +5383,13 @@ int fx_find_familiar (Scriptable* Owner, Actor* target, Effect* fx)
 	//FIXME: the familiar block field is not saved in the game and not set when the
 	//familiar is itemized, so a game reload will clear it (see how this is done in original)
 	if (game->familiarBlock) {
-		displaymsg->DisplayConstantStringName(STR_FAMBLOCK, DMC_RED, target);
+		displaymsg->DisplayConstantStringName(STR_FAMBLOCK, gamedata->GetColor("DMC_RED"), target);
 		return FX_NOT_APPLIED;
 	}
 
 	//The protagonist is ALWAYS in the first slot
 	if (game->GetPC(0, false)!=target) {
-		displaymsg->DisplayConstantStringName(STR_FAMPROTAGONIST, DMC_RED, target);
+		displaymsg->DisplayConstantStringName(STR_FAMPROTAGONIST, gamedata->GetColor("DMC_RED"), target);
 		return FX_NOT_APPLIED;
 	}
 
@@ -6327,12 +6327,12 @@ int fx_cast_spell_on_condition (Scriptable* Owner, Actor* target, Effect* fx)
 			if (fx->Parameter2 == COND_GOTHIT) {
 				unsigned int dist = GetSpellDistance(refs[i], target);
 				if (!dist) {
-					displaymsg->DisplayConstantStringName(STR_CONTFAIL, DMC_RED, target);
+					displaymsg->DisplayConstantStringName(STR_CONTFAIL, gamedata->GetColor("DMC_RED"), target);
 					continue;
 				}
 				if (PersonalDistance(target, actor) > dist) {
 					//display 'One of the spells has failed.'
-					displaymsg->DisplayConstantStringName(STR_CONTFAIL, DMC_RED, target);
+					displaymsg->DisplayConstantStringName(STR_CONTFAIL, gamedata->GetColor("DMC_RED"), target);
 					continue;
 				}
 			}
@@ -6379,7 +6379,7 @@ int fx_create_contingency (Scriptable* /*Owner*/, Actor* target, Effect* fx)
 	if (core->InCutSceneMode()) return FX_NOT_APPLIED;
 
 	if (target->fxqueue.HasEffectWithSource(fx_contingency_ref, fx->SourceRef)) {
-		displaymsg->DisplayConstantStringName(STR_CONTDUP, DMC_WHITE, target);
+		displaymsg->DisplayConstantStringName(STR_CONTDUP, gamedata->GetColor("DMC_WHITE"), target);
 		return FX_NOT_APPLIED;
 	}
 
@@ -6721,13 +6721,13 @@ int fx_set_area_effect (Scriptable* Owner, Actor* target, Effect* fx)
 
 	// check if the new trap count is cheesy (only saved traps count)
 	if (map->GetTrapCount(iter) + 1 > gamedata->GetTrapLimit(Owner)) {
-		displaymsg->DisplayConstantStringName(STR_NOMORETRAP, DMC_WHITE, target);
+		displaymsg->DisplayConstantStringName(STR_NOMORETRAP, gamedata->GetColor("DMC_WHITE"), target);
 		return FX_NOT_APPLIED;
 	}
 
 	//check if we are under attack
 	if (GetNearestEnemyOf(map, target, ORIGIN_SEES_ENEMY|ENEMY_SEES_ORIGIN)) {
-		displaymsg->DisplayConstantStringName(STR_MAYNOTSETTRAP, DMC_WHITE, target);
+		displaymsg->DisplayConstantStringName(STR_MAYNOTSETTRAP, gamedata->GetColor("DMC_WHITE"), target);
 		return FX_NOT_APPLIED;
 	}
 
@@ -6747,7 +6747,7 @@ int fx_set_area_effect (Scriptable* Owner, Actor* target, Effect* fx)
 
 	if (roll>skill) {
 		//failure
-		displaymsg->DisplayConstantStringName(STR_SNAREFAILED, DMC_WHITE, target);
+		displaymsg->DisplayConstantStringName(STR_SNAREFAILED, gamedata->GetColor("DMC_WHITE"), target);
 		if (target->LuckyRoll(1,100,0)<25) {
 			ResRef spl;
 			spl.SNPrintF("%.7sF", fx->Resource.CString());
@@ -6756,7 +6756,7 @@ int fx_set_area_effect (Scriptable* Owner, Actor* target, Effect* fx)
 		return FX_NOT_APPLIED;
 	}
 	//success
-	displaymsg->DisplayConstantStringName(STR_SNARESUCCEED, DMC_WHITE, target);
+	displaymsg->DisplayConstantStringName(STR_SNARESUCCEED, gamedata->GetColor("DMC_WHITE"), target);
 	target->VerbalConstant(VB_TRAP_SET);
 	// save the current spell ref, so the rest of its effects can be applied afterwards
 	ResRef OldSpellResRef(Owner->SpellResRef);
@@ -6833,7 +6833,7 @@ int fx_create_spell_sequencer(Scriptable* /*Owner*/, Actor* target, Effect* fx)
 {
 	// print("fx_create_spell_sequencer(%2d): Level: %d, Count: %d", fx->Opcode, fx->Parameter1, fx->Parameter2);
 	if (target->fxqueue.HasEffectWithSource(fx_spell_sequencer_active_ref, fx->SourceRef)) {
-		displaymsg->DisplayConstantStringName(STR_SEQDUP, DMC_WHITE, target);
+		displaymsg->DisplayConstantStringName(STR_SEQDUP, gamedata->GetColor("DMC_WHITE"), target);
 		return FX_NOT_APPLIED;
 	}
 	//just a call to activate the spell sequencer creation gui
@@ -7843,7 +7843,7 @@ int fx_resist_spell_and_message (Scriptable* Owner, Actor* target, Effect *fx)
 		char *sourceName = core->GetCString(sourceNameRef, 0);
 		core->GetTokenDictionary()->SetAtCopy("RESOURCE", sourceName);
 		free(sourceName);
-		displaymsg->DisplayConstantStringName(STR_RES_RESISTED, DMC_WHITE, target);
+		displaymsg->DisplayConstantStringName(STR_RES_RESISTED, gamedata->GetColor("DMC_WHITE"), target);
 	}
 	//this has effect only on first apply, it will stop applying the spell
 	return FX_ABORT;

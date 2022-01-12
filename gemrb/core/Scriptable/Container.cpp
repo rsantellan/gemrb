@@ -164,9 +164,9 @@ void Container::TryPickLock(const Actor *actor)
 {
 	if (LockDifficulty == 100) {
 		if (OpenFail != (ieDword)-1) {
-			displaymsg->DisplayStringName(OpenFail, DMC_BG2XPGREEN, actor, IE_STR_SOUND|IE_STR_SPEECH);
+			displaymsg->DisplayStringName(OpenFail, gamedata->GetColor("DMC_BG2XPGREEN"), actor, IE_STR_SOUND|IE_STR_SPEECH);
 		} else {
-			displaymsg->DisplayConstantStringName(STR_CONT_NOPICK, DMC_BG2XPGREEN, actor);
+			displaymsg->DisplayConstantStringName(STR_CONT_NOPICK, gamedata->GetColor("DMC_BG2XPGREEN"), actor);
 		}
 		return;
 	}
@@ -179,18 +179,18 @@ void Container::TryPickLock(const Actor *actor)
 			stat *= 7; // convert to percent (magic 7 is from RE)
 			int dexmod = actor->GetAbilityBonus(IE_DEX);
 			stat += dexmod; // the original didn't use it, so let's not multiply it
-			displaymsg->DisplayRollStringName(39301, DMC_LIGHTGREY, actor, stat-dexmod, LockDifficulty, dexmod);
+			displaymsg->DisplayRollStringName(39301, gamedata->GetColor("DMC_LIGHTGREY"), actor, stat-dexmod, LockDifficulty, dexmod);
 		}
 	}
 	if (stat < LockDifficulty) {
-		displaymsg->DisplayConstantStringName(STR_LOCKPICK_FAILED, DMC_BG2XPGREEN, actor);
+		displaymsg->DisplayConstantStringName(STR_LOCKPICK_FAILED, gamedata->GetColor("DMC_BG2XPGREEN"), actor);
 		AddTrigger(TriggerEntry(trigger_picklockfailed, actor->GetGlobalID()));
 		core->PlaySound(DS_PICKFAIL, SFX_CHAN_HITS); //AMB_D21
 		return;
 	}
 	SetContainerLocked(false);
 	core->GetGameControl()->ResetTargetMode();
-	displaymsg->DisplayConstantStringName(STR_LOCKPICK_DONE, DMC_LIGHTGREY, actor);
+	displaymsg->DisplayConstantStringName(STR_LOCKPICK_DONE, gamedata->GetColor("DMC_LIGHTGREY"), actor);
 	AddTrigger(TriggerEntry(trigger_unlocked, actor->GetGlobalID()));
 	core->PlaySound(DS_PICKLOCK, SFX_CHAN_HITS); //AMB_D21D
 	ImmediateEvent();
@@ -218,16 +218,16 @@ void Container::TryBashLock(Actor *actor)
 	if (core->HasFeature(GF_3ED_RULES)) {
 		// ~Bash door check. Roll %d + %d Str mod > %d door DC.~
 		// there is no separate string for non-doors
-		displaymsg->DisplayRollStringName(20460, DMC_LIGHTGREY, actor, roll, bonus, LockDifficulty);
+		displaymsg->DisplayRollStringName(20460, gamedata->GetColor("DMC_LIGHTGREY"), actor, roll, bonus, LockDifficulty);
 	}
 
 	actor->FaceTarget(this);
 	if(roll < LockDifficulty || LockDifficulty == 100) {
-		displaymsg->DisplayConstantStringName(STR_CONTBASH_FAIL, DMC_BG2XPGREEN, actor);
+		displaymsg->DisplayConstantStringName(STR_CONTBASH_FAIL, gamedata->GetColor("DMC_BG2XPGREEN"), actor);
 		return;
 	}
 
-	displaymsg->DisplayConstantStringName(STR_CONTBASH_DONE, DMC_LIGHTGREY, actor);
+	displaymsg->DisplayConstantStringName(STR_CONTBASH_DONE, gamedata->GetColor("DMC_LIGHTGREY"), actor);
 	SetContainerLocked(false);
 	core->GetGameControl()->ResetTargetMode();
 	//Is this really useful ?

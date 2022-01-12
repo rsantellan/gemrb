@@ -476,38 +476,38 @@ static int CanSave()
 	// NOTE: can't save  during a rest, chapter information or movie (ref CANTSAVEMOVIE)
 	// is handled automatically, but without a message
 	if (core->InCutSceneMode()) {
-		displaymsg->DisplayConstantString(STR_CANTSAVE, DMC_BG2XPGREEN);
+		displaymsg->DisplayConstantString(STR_CANTSAVE, gamedata->GetColor("DMC_BG2XPGREEN"));
 		return 1;
 	}
 
 	const Store *store = core->GetCurrentStore();
 	if (store) {
-		displaymsg->DisplayConstantString(STR_CANTSAVESTORE, DMC_BG2XPGREEN);
+		displaymsg->DisplayConstantString(STR_CANTSAVESTORE, gamedata->GetColor("DMC_BG2XPGREEN"));
 		return 1; //can't save while store is open
 	}
 	const GameControl *gc = core->GetGameControl();
 	if (!gc) {
-		displaymsg->DisplayConstantString(STR_CANTSAVE, DMC_BG2XPGREEN);
+		displaymsg->DisplayConstantString(STR_CANTSAVE, gamedata->GetColor("DMC_BG2XPGREEN"));
 		return -1; //no gamecontrol!!!
 	}
 	if (gc->GetDialogueFlags()&DF_IN_DIALOG) {
-		displaymsg->DisplayConstantString(STR_CANTSAVEDIALOG, DMC_BG2XPGREEN);
+		displaymsg->DisplayConstantString(STR_CANTSAVEDIALOG, gamedata->GetColor("DMC_BG2XPGREEN"));
 		return 2; //can't save while in dialog
 	}
 
 	const Game *game = core->GetGame();
 	if (!game) {
-		displaymsg->DisplayConstantString(STR_CANTSAVE, DMC_BG2XPGREEN);
+		displaymsg->DisplayConstantString(STR_CANTSAVE, gamedata->GetColor("DMC_BG2XPGREEN"));
 		return -1;
 	}
 	if (game->CombatCounter) {
-		displaymsg->DisplayConstantString(STR_CANTSAVECOMBAT, DMC_BG2XPGREEN);
+		displaymsg->DisplayConstantString(STR_CANTSAVECOMBAT, gamedata->GetColor("DMC_BG2XPGREEN"));
 		return 3;
 	}
 
 	const Map *map = game->GetCurrentArea();
 	if (!map) {		
-		displaymsg->DisplayConstantString(STR_CANTSAVE, DMC_BG2XPGREEN);
+		displaymsg->DisplayConstantString(STR_CANTSAVE, gamedata->GetColor("DMC_BG2XPGREEN"));
 		return -1;
 	}
 
@@ -515,12 +515,12 @@ static int CanSave()
 	proIterator pIter;
 	if (map->GetProjectileCount(pIter)) {
 		// can't save while AOE spells are in effect
-		displaymsg->DisplayConstantString(STR_CANTSAVE, DMC_BG2XPGREEN);
+		displaymsg->DisplayConstantString(STR_CANTSAVE, gamedata->GetColor("DMC_BG2XPGREEN"));
 	}
 
 	if (map->AreaFlags&AF_NOSAVE) {
 		//cannot save in area
-		displaymsg->DisplayConstantString(STR_CANTSAVE, DMC_BG2XPGREEN);
+		displaymsg->DisplayConstantString(STR_CANTSAVE, gamedata->GetColor("DMC_BG2XPGREEN"));
 		return 4;
 	}
 
@@ -531,16 +531,16 @@ static int CanSave()
 		// STATE_NOSAVE tracks actors not to be stored in GAM, not game saveability
 		if (actor->GetStat(IE_STATE_ID) & (STATE_NOSAVE|STATE_MINDLESS)) {
 			//some actor is in nosave state
-			displaymsg->DisplayConstantString(STR_CANTSAVENOCTRL, DMC_BG2XPGREEN);
+			displaymsg->DisplayConstantString(STR_CANTSAVENOCTRL, gamedata->GetColor("DMC_BG2XPGREEN"));
 			return 5;
 		}
 		if (actor->GetCurrentArea()!=map) {
 			//scattered
-			displaymsg->DisplayConstantString(STR_CANTSAVE, DMC_BG2XPGREEN);
+			displaymsg->DisplayConstantString(STR_CANTSAVE, gamedata->GetColor("DMC_BG2XPGREEN"));
 			return 6;
 		}
 		if (map->AnyEnemyNearPoint(actor->Pos)) {
-			displaymsg->DisplayConstantString( STR_CANTSAVEMONS, DMC_BG2XPGREEN );
+			displaymsg->DisplayConstantString( STR_CANTSAVEMONS, gamedata->GetColor("DMC_BG2XPGREEN") );
 			return 7;
 		}
 	}
@@ -551,7 +551,7 @@ static int CanSave()
 	for (neighbour = nearActors.begin(); neighbour != nearActors.end(); ++neighbour) {
 		if ((*neighbour)->GetInternalFlag() & IF_NOINT) {
 			// dialog about to start or similar
-			displaymsg->DisplayConstantString(STR_CANTSAVEDIALOG2, DMC_BG2XPGREEN);
+			displaymsg->DisplayConstantString(STR_CANTSAVEDIALOG2, gamedata->GetColor("DMC_BG2XPGREEN"));
 			return 8;
 		}
 	}
@@ -621,23 +621,23 @@ int SaveGameIterator::CreateSaveGame(int index, bool mqs) const
 	GameControl *gc = core->GetGameControl();
 	assert(gc);
 	if (!CreateSavePath(Path, index, slotname)) {
-		displaymsg->DisplayConstantString(STR_CANTSAVE, DMC_BG2XPGREEN);
+		displaymsg->DisplayConstantString(STR_CANTSAVE, gamedata->GetColor("DMC_BG2XPGREEN"));
 		gc->SetDisplayText(STR_CANTSAVE, 30);
 		return GEM_ERROR;
 	}
 
 	if (!DoSaveGame(Path, overrideRunning)) {
-		displaymsg->DisplayConstantString(STR_CANTSAVE, DMC_BG2XPGREEN);
+		displaymsg->DisplayConstantString(STR_CANTSAVE, gamedata->GetColor("DMC_BG2XPGREEN"));
 		gc->SetDisplayText(STR_CANTSAVE, 30);
 		return GEM_ERROR;
 	}
 
 	// Save successful / Quick-save successful
 	if (qsave) {
-		displaymsg->DisplayConstantString(STR_QSAVESUCCEED, DMC_BG2XPGREEN);
+		displaymsg->DisplayConstantString(STR_QSAVESUCCEED, gamedata->GetColor("DMC_BG2XPGREEN"));
 		gc->SetDisplayText(STR_QSAVESUCCEED, 30);
 	} else {
-		displaymsg->DisplayConstantString(STR_SAVESUCCEED, DMC_BG2XPGREEN);
+		displaymsg->DisplayConstantString(STR_SAVESUCCEED, gamedata->GetColor("DMC_BG2XPGREEN"));
 		gc->SetDisplayText(STR_SAVESUCCEED, 30);
 	}
 	return GEM_OK;
@@ -685,19 +685,19 @@ int SaveGameIterator::CreateSaveGame(Holder<SaveGame> save, const char *slotname
 	assert(gc); //this is already checked in CanSave and core only has one if there is a game anyway
 	char Path[_MAX_PATH];
 	if (!CreateSavePath(Path, index, slotname)) {
-		displaymsg->DisplayConstantString(STR_CANTSAVE, DMC_BG2XPGREEN);
+		displaymsg->DisplayConstantString(STR_CANTSAVE, gamedata->GetColor("DMC_BG2XPGREEN"));
 		gc->SetDisplayText(STR_CANTSAVE, 30);
 		return GEM_ERROR;
 	}
 
 	if (!DoSaveGame(Path, overrideRunning)) {
-		displaymsg->DisplayConstantString(STR_CANTSAVE, DMC_BG2XPGREEN);
+		displaymsg->DisplayConstantString(STR_CANTSAVE, gamedata->GetColor("DMC_BG2XPGREEN"));
 		gc->SetDisplayText(STR_CANTSAVE, 30);
 		return GEM_ERROR;
 	}
 
 	// Save successful
-	displaymsg->DisplayConstantString(STR_SAVESUCCEED, DMC_BG2XPGREEN);
+	displaymsg->DisplayConstantString(STR_SAVESUCCEED, gamedata->GetColor("DMC_BG2XPGREEN"));
 	gc->SetDisplayText(STR_SAVESUCCEED, 30);
 	return GEM_OK;
 }

@@ -1194,9 +1194,9 @@ void Game::ShareXP(int xp, int flags) const
 	//you have gained/lost ... xp
 	if (core->HasFeedback(FT_MISC)) {
 		if (xp > 0) {
-			displaymsg->DisplayConstantStringValue(STR_GOTXP, DMC_BG2XPGREEN, (ieDword) xp);
+			displaymsg->DisplayConstantStringValue(STR_GOTXP, gamedata->GetColor("DMC_BG2XPGREEN"), (ieDword) xp);
 		} else {
-			displaymsg->DisplayConstantStringValue(STR_LOSTXP, DMC_BG2XPGREEN, (ieDword) -xp);
+			displaymsg->DisplayConstantStringValue(STR_LOSTXP, gamedata->GetColor("DMC_BG2XPGREEN"), (ieDword) -xp);
 		}
 	}
 	for (auto pc : PCs) {
@@ -1300,9 +1300,9 @@ void Game::SetReputation(ieDword r)
 	if (r<10) r=10;
 	else if (r>200) r=200;
 	if (Reputation > r && core->HasFeedback(FT_MISC)) {
-		displaymsg->DisplayConstantStringValue(STR_LOSTREP, DMC_GOLD, (Reputation - r) / 10);
+		displaymsg->DisplayConstantStringValue(STR_LOSTREP, gamedata->GetColor("DMC_GOLD"), (Reputation - r) / 10);
 	} else if (Reputation < r && core->HasFeedback(FT_MISC)) {
-		displaymsg->DisplayConstantStringValue(STR_GOTREP, DMC_GOLD, (r - Reputation) / 10);
+		displaymsg->DisplayConstantStringValue(STR_GOTREP, gamedata->GetColor("DMC_GOLD"), (r - Reputation) / 10);
 	}
 	Reputation = r;
 	for (auto pc : PCs) {
@@ -1327,9 +1327,9 @@ void Game::AddGold(int add)
 	ieDword old = PartyGold;
 	PartyGold = std::max(0, signed(PartyGold) + add);
 	if (old<PartyGold) {
-		displaymsg->DisplayConstantStringValue( STR_GOTGOLD, DMC_GOLD, PartyGold-old);
+		displaymsg->DisplayConstantStringValue( STR_GOTGOLD, gamedata->GetColor("DMC_GOLD"), PartyGold-old);
 	} else {
-		displaymsg->DisplayConstantStringValue( STR_LOSTGOLD, DMC_GOLD, old-PartyGold);
+		displaymsg->DisplayConstantStringValue( STR_LOSTGOLD, gamedata->GetColor("DMC_GOLD"), old-PartyGold);
 	}
 }
 
@@ -1804,7 +1804,7 @@ bool Game::RestParty(int checks, int dream, int hp)
 
 	core->GetTokenDictionary()->SetAtCopy("DURATION", tmpstr);
 	free(tmpstr);
-	displaymsg->DisplayString(restindex, DMC_WHITE, 0);
+	displaymsg->DisplayString(restindex, gamedata->GetColor("DMC_WHITE"), 0);
 	return cutscene;
 }
 
