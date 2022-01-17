@@ -347,4 +347,12 @@ void DisplayMessage::DisplayStringName(const String& text, const Color &color, c
 		free(newstr);
 	}
 }
+
+template<class... Args>
+void DisplayRollStringName(int stridx, const char *colorName, const Scriptable *speaker, Args&&... args)
+{
+	const Color& color = gamedata->GetColor(colorName);
+  	return DisplayRollStringName(stridx, color, speaker, std::forward<Args>(args)...);
+}
+
 }

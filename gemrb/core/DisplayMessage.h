@@ -91,6 +91,8 @@ public:
 	void DisplayStringName(const String& text, const Color &color, const Scriptable *speaker) const;
 	/** iwd2 hidden roll debugger */
 	void DisplayRollStringName(int stridx, const Color &color, const Scriptable *speaker, ...) const;
+	template<class... Args>
+	void DisplayRollStringName(int stridx, const char *colorName, const Scriptable *speaker, Args&&... args);
 };
 
 extern GEM_EXPORT DisplayMessage * displaymsg;
