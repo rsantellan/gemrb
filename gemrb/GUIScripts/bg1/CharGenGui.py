@@ -118,8 +118,8 @@ def getAbilities(area):
 	AbilityCount = CommonTables.Ability.GetRowCount ()
 	area.Append("\n")
 	for i in range(AbilityCount):
-		v = AbilityTable.GetValue (i, 2, GTV_REF)
-		stat = AbilityTable.GetValue (i, 3, GTV_INT)
+		v = CommonTables.Ability.GetValue (i, 2, GTV_REF)
+		stat = CommonTables.Ability.GetValue (i, 3, GTV_INT)
 		area.Append(v)
 		area.Append (": " + str(GemRB.GetPlayerStat (MyChar, stat)) + "\n")
 	area.Append("\n")
