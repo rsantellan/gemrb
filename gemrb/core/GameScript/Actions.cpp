@@ -5159,6 +5159,7 @@ void GameScript::GiveOrder(Scriptable* Sender, Action* parameters)
 	Scriptable* tar = GetScriptableFromObject(Sender, parameters);
 	if (tar) {
 		tar->AddTrigger(TriggerEntry(trigger_receivedorder, Sender->GetGlobalID(), parameters->int0Parameter));
+		tar->objects.LastCommander = Sender->GetGlobalID();
 	}
 }
 
