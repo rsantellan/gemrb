@@ -732,7 +732,7 @@ void WindowManager::DrawWindows() const
 }
 
 //copies a screenshot into a sprite
-Holder<Sprite2D> WindowManager::GetScreenshot(Window* win)
+Holder<Sprite2D> WindowManager::GetScreenshot(Window* win, unsigned int scaleDownRatio)
 {
 	Holder<Sprite2D> screenshot;
 	if (win) { // we don't really care if we are managing the window
@@ -748,7 +748,17 @@ Holder<Sprite2D> WindowManager::GetScreenshot(Window* win)
 		SetCursorFeedback(mouseState);
 	}
 
+	if (scaleDownRatio) {
+		screenshot = VideoDriver->SpriteScaleDown(screenshot, scaleDownRatio);
+	}
 	return screenshot;
+}
+
+// shorthand for generating gamewindow screenshots for saves
+Holder<Sprite2D> WindowManager::GetScreenshotPreview()
+{
+	// 5x reduce the image — file size, since buttons scale to fit on their own
+	return GetScreenshot(gameWin, 5);
 }
 
 Holder<Sprite2D> WindowManager::WinFrameEdge(int edge) const

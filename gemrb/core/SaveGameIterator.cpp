@@ -445,10 +445,8 @@ static bool DoSaveGame(const path_t& Path, bool overrideRunning)
 	WindowManager* wm = core->GetWindowManager();
 	if (!wm) return true; // skip imagery for tests
 
-	Holder<Sprite2D> preview = wm->GetScreenshot(wm->GetGameWindow());
-
-	// scale down to get more of the screen and reduce the size
-	preview = VideoDriver->SpriteScaleDown(preview, 5);
+	// Write the area preview image
+	Holder<Sprite2D> preview = wm->GetScreenshotPreview();
 	FileStream outfile;
 	outfile.Create(Path, core->GameNameResRef.c_str(), IE_BMP_CLASS_ID);
 	im->PutImage(&outfile, std::move(preview));

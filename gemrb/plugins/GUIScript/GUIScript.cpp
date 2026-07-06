@@ -4535,9 +4535,8 @@ static PyObject* GemRB_GetGamePreview(PyObject* /*self*/, PyObject* /*args*/)
 	WindowManager* wm = core->GetWindowManager();
 	if (!wm) Py_RETURN_NONE;
 
-	Holder<Sprite2D> preview = wm->GetScreenshot(wm->GetGameWindow());
 	// scale down to get more of the screen and reduce the size
-	preview = VideoDriver->SpriteScaleDown(preview, 5);
+	Holder<Sprite2D> preview = wm->GetScreenshotPreview();
 	return PyObject_FromHolder<Sprite2D>(preview);
 }
 

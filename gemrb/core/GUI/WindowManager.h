@@ -140,7 +140,8 @@ public:
 
 	Size ScreenSize() const { return screen.size; }
 
-	Holder<Sprite2D> GetScreenshot(Window* win);
+	Holder<Sprite2D> GetScreenshot(Window* win, unsigned int scaleDownRatio = 0);
+	Holder<Sprite2D> GetScreenshotPreview();
 	Window* GetGameWindow() const { return gameWin; }
 	Window* GetFocusWindow() const;
 
