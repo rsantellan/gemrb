@@ -25,9 +25,9 @@ public:
 	~SaveGameIterator() noexcept = default;
 	const charlist& GetSaveGames();
 	void DeleteSaveGame(const Holder<SaveGame>&) const;
-	int CreateSaveGame(Holder<SaveGame> save, const String& slotname, bool force = false) const;
-	int CreateSaveGame(Holder<SaveGame>, StringView slotname, bool force = false) const;
-	int CreateSaveGame(int index, bool mqs = false) const;
+	int CreateSaveGame(Holder<SaveGame> save, const String& slotname, Holder<Sprite2D> preview, bool force = false) const;
+	int CreateSaveGame(Holder<SaveGame>, StringView slotname, Holder<Sprite2D> preview, bool force = false) const;
+	int CreateSaveGame(int index, bool mqs, Holder<Sprite2D> preview) const;
 	Holder<SaveGame> GetSaveGame(const String& slotname);
 
 private:

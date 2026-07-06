@@ -6160,6 +6160,9 @@ void GameScript::ExportParty(Scriptable* /*Sender*/, Action* parameters)
 
 void GameScript::SaveGame(Scriptable* /*Sender*/, Action* parameters)
 {
+	WindowManager* wm = core->GetWindowManager();
+	Holder<Sprite2D> preview = wm ? wm->GetScreenshotPreview() : nullptr;
+
 	if (core->HasFeature(GFFlags::STRREF_SAVEGAME)) {
 		String basename = u"Auto-Save";
 		AutoTable tab = gamedata->LoadTable("savegame");
@@ -6169,9 +6172,9 @@ void GameScript::SaveGame(Scriptable* /*Sender*/, Action* parameters)
 		String str = core->GetString(ieStrRef(parameters->int0Parameter), STRING_FLAGS::STRREFOFF);
 		String FolderName = fmt::format(u"{} - {}", basename, str);
 		auto saveGame = core->GetSaveGameIterator()->GetSaveGame(FolderName);
-		core->GetSaveGameIterator()->CreateSaveGame(std::move(saveGame), FolderName);
+		core->GetSaveGameIterator()->CreateSaveGame(std::move(saveGame), FolderName, std::move(preview));
 	} else {
-		core->GetSaveGameIterator()->CreateSaveGame(parameters->int0Parameter);
+		core->GetSaveGameIterator()->CreateSaveGame(parameters->int0Parameter, false, std::move(preview));
 	}
 }
 

@@ -4300,8 +4300,8 @@ static PyObject* GemRB_SaveConfig(PyObject* /*self*/, PyObject* /*args*/)
 PyDoc_STRVAR(GemRB_SaveGame__doc,
 	     "===== SaveGame =====\n\
 \n\
-**Prototype:** GemRB.SaveGame (savegame, description[, version])\n\
-**Prototype:** GemRB.SaveGame (position[, version])\n\
+**Prototype:** GemRB.SaveGame (savegame, description[, version, preview])\n\
+**Prototype:** GemRB.SaveGame (position[, version, preview])\n\
 \n\
 **Description:** Saves the current game. If version is given, it will save \n\
 to a specific SAV version.\n\
@@ -4311,6 +4311,7 @@ to a specific SAV version.\n\
   * savegame - a save game python object (GetSaveGames)\n\
   * description - the string that will also appear in the filename\n\
   * version - an optional SAV version override\n\
+  * preview - an optional GSprite2D with an area screenshot\n\
 \n\
 **Return value:** 0 on success\n\
 \n\
@@ -4318,7 +4319,7 @@ to a specific SAV version.\n\
 \n\
     GemRB.SaveGame (10, 'After meeting Dhall')\n\
 \n\
-**See also:** [LoadGame](LoadGame.md), [SaveCharacter](SaveCharacter.md)");
+**See also:** [LoadGame](LoadGame.md), [SaveCharacter](SaveCharacter.md), [GetGamePreview](GetGamePreview.md)");
 
 static PyObject* GemRB_SaveGame(PyObject* /*self*/, PyObject* args)
 {
@@ -4326,8 +4327,9 @@ static PyObject* GemRB_SaveGame(PyObject* /*self*/, PyObject* args)
 	int slot = -1;
 	int Version = -1;
 	PyObject* folder = nullptr;
+	PyObject* preview = nullptr;
 
-	if (!PyArg_ParseTuple(args, "OO|i", &obj, &folder, &Version)) {
+	if (!PyArg_ParseTuple(args, "OO|iO", &obj, &folder, &Version, &preview)) {
 		PyErr_Clear();
 		PARSE_ARGS(args, "i|i", &slot, &Version);
 	}
@@ -4339,15 +4341,20 @@ static PyObject* GemRB_SaveGame(PyObject* /*self*/, PyObject* args)
 		return RuntimeError("No savegame iterator");
 	}
 
+	Holder<Sprite2D> areaPic;
+	if (preview != Py_None) {
+		areaPic = SpriteFromPy(preview);
+	}
+
 	if (Version > 0) {
 		game->version = static_cast<GAMVersion>(Version);
 	}
 	if (slot == -1) {
 		CObject<SaveGame> save(obj);
 
-		return PyLong_FromLong(sgip->CreateSaveGame(save, PyString_AsStringObj(folder)));
+		return PyLong_FromLong(sgip->CreateSaveGame(save, PyString_AsStringObj(folder), std::move(areaPic)));
 	} else {
-		return PyLong_FromLong(sgip->CreateSaveGame(slot, core->config.MultipleQuickSaves));
+		return PyLong_FromLong(sgip->CreateSaveGame(slot, core->config.MultipleQuickSaves, std::move(areaPic)));
 	}
 }
 

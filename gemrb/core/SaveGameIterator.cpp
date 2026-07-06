@@ -382,7 +382,7 @@ void SaveGameIterator::PruneQuickSave(StringView folder) const
 }
 
 /** Save game to given directory */
-static bool DoSaveGame(const path_t& Path, bool overrideRunning)
+static bool DoSaveGame(const path_t& Path, bool overrideRunning, Holder<Sprite2D> preview)
 {
 	const Game* game = core->GetGame();
 	//saving areas to cache currently in memory
@@ -439,14 +439,7 @@ static bool DoSaveGame(const path_t& Path, bool overrideRunning)
 		}
 	}
 
-	// Create area preview
-	// FIXME: the preview should be passed in by the caller!
-
-	WindowManager* wm = core->GetWindowManager();
-	if (!wm) return true; // skip imagery for tests
-
 	// Write the area preview image
-	Holder<Sprite2D> preview = wm->GetScreenshotPreview();
 	FileStream outfile;
 	outfile.Create(Path, core->GameNameResRef.c_str(), IE_BMP_CLASS_ID);
 	im->PutImage(&outfile, std::move(preview));
@@ -575,7 +568,7 @@ static bool CreateSavePath(path_t& path, int index, StringView slotname)
 	return true;
 }
 
-int SaveGameIterator::CreateSaveGame(int index, bool mqs) const
+int SaveGameIterator::CreateSaveGame(int index, bool mqs, Holder<Sprite2D> preview) const
 {
 	AutoTable tab = gamedata->LoadTable("savegame");
 	StringView slotname;
@@ -615,7 +608,7 @@ int SaveGameIterator::CreateSaveGame(int index, bool mqs) const
 		return GEM_ERROR;
 	}
 
-	if (!DoSaveGame(Path, overrideRunning)) {
+	if (!DoSaveGame(Path, overrideRunning, std::move(preview))) {
 		displaymsg->DisplayMsgCentered(HCStrings::CantSave, FT_ANY, GUIColors::XPCHANGE);
 		return GEM_ERROR;
 	}
@@ -629,13 +622,13 @@ int SaveGameIterator::CreateSaveGame(int index, bool mqs) const
 	return GEM_OK;
 }
 
-int SaveGameIterator::CreateSaveGame(Holder<SaveGame> save, const String& slotname, bool force) const
+int SaveGameIterator::CreateSaveGame(Holder<SaveGame> save, const String& slotname, Holder<Sprite2D> preview, bool force) const
 {
 	auto mbSlotName = MBStringFromString(slotname);
-	return CreateSaveGame(std::move(save), StringView { mbSlotName }, force);
+	return CreateSaveGame(std::move(save), StringView { mbSlotName }, std::move(preview), force);
 }
 
-int SaveGameIterator::CreateSaveGame(Holder<SaveGame> save, StringView slotname, bool force) const
+int SaveGameIterator::CreateSaveGame(Holder<SaveGame> save, StringView slotname, Holder<Sprite2D> preview, bool force) const
 {
 	if (!slotname) {
 		return GEM_ERROR;
@@ -696,7 +689,7 @@ int SaveGameIterator::CreateSaveGame(Holder<SaveGame> save, StringView slotname,
 		return GEM_ERROR;
 	}
 
-	if (!DoSaveGame(Path, overrideRunning)) {
+	if (!DoSaveGame(Path, overrideRunning, std::move(preview))) {
 		displaymsg->DisplayMsgCentered(HCStrings::CantSave, FT_ANY, GUIColors::XPCHANGE);
 		return GEM_ERROR;
 	}

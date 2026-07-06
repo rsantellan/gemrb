@@ -141,7 +141,7 @@ TEST_P(SaveGameTest, LoadAndResaveGameTest)
 	// try quicksaving (simpler code)
 	SetTokenAsString("SaveDir", u"saves"); // something resets it since the last call
 	core->config.SavePath = "tests/resources"; // set to build dir destination, so we don't pollute the source
-	int ret = sgi->CreateSaveGame(1, false);
+	int ret = sgi->CreateSaveGame(1, false, nullptr);
 	ASSERT_TRUE(ret == GEM_OK);
 	Log(DEBUG, "SaveGameTest", "{} game saved successfully!\n", gameType);
 

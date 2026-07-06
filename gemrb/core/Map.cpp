@@ -31,6 +31,7 @@
 
 #include "Audio/Ambient.h"
 #include "GUI/GameControl.h"
+#include "GUI/WindowManager.h"
 #include "GameScript/GSUtils.h"
 #include "Scriptable/Container.h"
 #include "Scriptable/Door.h"
@@ -272,7 +273,9 @@ void Map::MoveToNewArea(const ResRef& newArea, const ieVariable& entrance, unsig
 
 		// perform autosave, but not in ambush and other special areas
 		if (map && !(map->AreaFlags & AF_NOSAVE)) {
-			core->GetSaveGameIterator()->CreateSaveGame(0, false);
+			WindowManager* wm = core->GetWindowManager();
+			Holder<Sprite2D> preview = wm ? wm->GetScreenshotPreview() : nullptr;
+			core->GetSaveGameIterator()->CreateSaveGame(0, false, std::move(preview));
 		}
 	}
 	if (!map) {

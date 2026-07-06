@@ -18,10 +18,17 @@ SaveDetailWindow = None
 OptionsWindow = None
 Games = ()
 ScrollBar = 0
+CurrentPreview = None
 
 
 def OpenSaveWindow ():
-	global SaveWindow, OptionsWindow, Games, ScrollBar
+	global SaveWindow, OptionsWindow, Games, ScrollBar, CurrentPreview
+
+	# temporarily reenable the game window, so the screenshot does not get tinted darker
+	GameWin = GemRB.GetView("GAMEWIN")
+	GameWin.SetDisabled (False)
+	CurrentPreview = GemRB.GetGamePreview ()
+	GameWin.SetDisabled (True)
 
 	if SaveWindow:
 		if SaveDetailWindow: OpenSaveDetailWindow ()
@@ -223,7 +230,7 @@ def OpenSaveDetailWindow ():
 
 	# Areapreview
 	Button = Window.GetControl (0)
-	Button.SetPicture (GemRB.GetGamePreview())
+	Button.SetPicture (CurrentPreview)
 
 	# PC portraits
 	from GameCheck import MAX_PARTY_SIZE
@@ -270,10 +277,10 @@ def ConfirmedSaveGame ():
 	#FIXME: make this work
 	#LoadScreen.StartLoadScreen (LoadScreen.LS_TYPE_SAVING)
 	CloseSaveWindow ()
+	game = None
 	if Pos < len(Games):
-		GemRB.SaveGame (Games[Pos], Slotname)
-	else:
-		GemRB.SaveGame (None, Slotname)
+		game = Games[Pos]
+	GemRB.SaveGame (game, Slotname, -1, CurrentPreview)
 
 def QuickSavePressed():
 	GemRB.SaveGame(1)

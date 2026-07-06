@@ -19,6 +19,7 @@ SaveWindow = None
 ConfirmWindow = None
 SaveButton = 0
 Games = ()
+CurrentPreview = None
 ScrollBar = 0
 # this lookup table is used only by bg2
 str_chapter = (48007, 48006, 16205, 16206, 16207, 16208, 16209, 71020, 71021, 71022)
@@ -28,8 +29,14 @@ sav_version = 0
 strs = { 'cancel' : 13727, 'save' : 15588, 'delete' : 13957, 'empty' : 15304, 'overwrite' : 15306, 'yousure' : 15305 }
 
 def OpenSaveWindow ():
-	global SaveWindow, Games, ScrollBar
+	global SaveWindow, Games, ScrollBar, CurrentPreview
 	global num_rows, ctrl_offset, sav_version, strs
+
+	# temporarily reenable the game window, so the screenshot does not get tinted darker
+	GameWin = GemRB.GetView("GAMEWIN")
+	GameWin.SetDisabled (False)
+	CurrentPreview = GemRB.GetGamePreview ()
+	GameWin.SetDisabled (True)
 
 	if GameCheck.IsIWD2 ():
 		num_rows = 5
@@ -184,10 +191,10 @@ def ConfirmedSaveGame (Pos):
 	CloseSaveWindow ()
 	GUICommonWindows.CloseTopWindow ()
 
+	game = None
 	if Pos < len(Games):
-		GemRB.SaveGame (Games[Pos], Slotname, sav_version)
-	else:
-		GemRB.SaveGame (None, Slotname, sav_version)
+		game = Games[Pos]
+	GemRB.SaveGame (game, Slotname, sav_version, CurrentPreview)
 	return
 
 def OpenConfirmWindow (btn):
@@ -210,7 +217,7 @@ def OpenConfirmWindow (btn):
 		GameDate = ""
 		save_strref = strs['save']
 		if AreaPreview:
-			AreaPreview.SetPicture (None)
+			AreaPreview.SetPicture (CurrentPreview)
 
 	NameField = ConfirmWindow.GetControl (ctrl_offset[7])
 	NameField.SetText (Slotname)
