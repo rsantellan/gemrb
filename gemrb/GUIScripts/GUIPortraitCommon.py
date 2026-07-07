@@ -189,24 +189,21 @@ def PortraitButtonLeftPress():
 # Button custom done
 def PortraitButtonCustomDone():
 	PortraitName = SaveCustomPortrait()
-	if not IsPortraitModification:
-		if GameCheck.IsBG1OrEE():
-			import CharGenCommon
-			CharGenCommon.next()
-		elif GameCheck.IsIWD1():
-			CGPortraitChangeToRace(PortraitName)
+	PortraitApplyName(PortraitName)
 
 # Button next press
 def PortraitButtonNextPress():
 	PortraitName = PortraitApplySelection()
+	PortraitApplyName(PortraitName)
+
+def PortraitApplyName(PortraitName):
 	if not IsPortraitModification:
 		if GameCheck.IsBG1OrEE():
 			import CharGenCommon
 			CharGenCommon.next()
 		elif GameCheck.IsIWD1():
 			CGPortraitChangeToRace(PortraitName)
-
-	
+			
 # This if for moving to next portrait
 def PortraitNext():
 	global LastPortrait
@@ -282,27 +279,30 @@ def PortraitApplySelection():
 		GemRB.FillPlayerInfo(Pc, PortraitName + PortraitSuffix["large"], PortraitName + PortraitSuffix["small"])
 	return PortraitName + PortraitSuffix["large"]
 
-# This is for the large custom portrait
-def PortraitCommonLargeCustom():
+# This is for the large and small custom portrait
+def PortraitCommonCustom(type = 'small'):
 	global PortraitList1, PortraitList2
-	global RowCount1
+	global RowCount1, RowCount2
 	global CustomWindow
 
 	Window = CustomWindow
 
-	Portrait = PortraitList1.QueryText()
+	Portrait = PortraitList1.QueryText() if 'medium' == type else PortraitList2.QueryText()
 
+	row_var = "Row1" if type == "medium" else "Row2"
+	row_count = RowCount1 if type == "medium" else RowCount2
 	# small hack
-	if GemRB.GetVar("Row1") == RowCount1:
+	if GemRB.GetVar(row_var) == row_count:
 		return
 
-	Label = Window.GetControl(0x10000007)
+
+	Label = Window.GetControl(0x10000007 if 'medium' == type else 0x10000008)
 	Label.SetText(Portrait)
 
 	Button = Window.GetControl(WindowButtonPosition["CustomPortrait"])
-
+	EmptyPortraitData = EmptyPortrait["medium"] if 'medium' == type else EmptyPortrait["small"]
 	if Portrait == "":
-		Portrait = EmptyPortrait["medium"]
+		Portrait = EmptyPortraitData
 		if IsPortraitModification:
 			Button.SetState(IE_GUI_BUTTON_DISABLED)
 		elif GameCheck.IsBG2OrEE() or GameCheck.IsBG2Demo():
@@ -310,7 +310,8 @@ def PortraitCommonLargeCustom():
 		else:
 			Button.SetState(IE_GUI_BUTTON_DISABLED)
 	else:
-		if PortraitList2.QueryText() != "":
+		SecondPortraitValue = PortraitList2.QueryText() if 'medium' == type else PortraitList1.QueryText()
+		if SecondPortraitValue:
 			if IsPortraitModification:
 				Button.SetState(IE_GUI_BUTTON_ENABLED)
 			elif GameCheck.IsBG2OrEE() or GameCheck.IsBG2Demo():
@@ -318,48 +319,8 @@ def PortraitCommonLargeCustom():
 			else:
 				Button.SetState(IE_GUI_BUTTON_ENABLED)
 
-	Preview = Window.GetControl(0)
-	Preview.SetPicture(Portrait, EmptyPortrait["medium"])
-
-# This is for the small custom portrait
-def PortraitCommonSmallCustom():
-	global PortraitList1, PortraitList2
-	global RowCount2
-	global CustomWindow
-
-	Window = CustomWindow
-
-	Portrait = PortraitList2.QueryText()
-
-	# small hack
-	if GemRB.GetVar("Row2") == RowCount2:
-		return
-
-	Label = Window.GetControl(0x10000008)
-	Label.SetText(Portrait)
-
-	Button = Window.GetControl(WindowButtonPosition["CustomPortrait"])
-
-	if Portrait == "":
-		Portrait = EmptyPortrait["small"]
-		if IsPortraitModification:
-			Button.SetState(IE_GUI_BUTTON_DISABLED)
-		elif GameCheck.IsBG2OrEE() or GameCheck.IsBG2Demo():
-			Button.SetDisabled(True)
-		else:
-			Button.SetState(IE_GUI_BUTTON_DISABLED)
-	else:
-		if PortraitList1.QueryText() != "":
-			if IsPortraitModification:
-				Button.SetState(IE_GUI_BUTTON_ENABLED)
-			elif GameCheck.IsBG2OrEE() or GameCheck.IsBG2Demo():
-				Button.SetDisabled(False)
-			else:
-				Button.SetState(IE_GUI_BUTTON_ENABLED)
-
-	Preview = Window.GetControl(1)
-	Preview.SetPicture(Portrait, EmptyPortrait["small"])
-
+	Preview = Window.GetControl(0 if 'medium' == type else 1)
+	Preview.SetPicture(Portrait, EmptyPortraitData)
 
 def PortraitCustomPress():
 	global PortraitsTable, LastPortrait
@@ -416,12 +377,12 @@ def PortraitCustomPress():
 		ListMode1 = 2
 	PortraitList1 = Window.GetControl(2)
 	RowCount1 = len(PortraitList1.ListResources(CHR_PORTRAITS, ListMode1))
-	PortraitList1.OnSelect(PortraitCommonLargeCustom)
+	PortraitList1.OnSelect(lambda: PortraitCommonCustom("medium"))
 	PortraitList1.SetVarAssoc("Row1", RowCount1)
 
 	PortraitList2 = Window.GetControl(WindowButtonPosition["CustomPortraitList"])
 	RowCount2 = len(PortraitList2.ListResources(CHR_PORTRAITS, 0))
-	PortraitList2.OnSelect(PortraitCommonSmallCustom)
+	PortraitList2.OnSelect(lambda: PortraitCommonCustom("small"))
 	PortraitList2.SetVarAssoc("Row2", RowCount2)
 	
 	ModalShadow = MODAL_SHADOW_NONE
