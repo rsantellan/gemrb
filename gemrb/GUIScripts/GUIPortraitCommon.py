@@ -48,6 +48,8 @@ def OnLoad(PortraitModification = False):
 	global Gender, IsPortraitModification, WindowButtonPosition
 	
 	IsPortraitModification = PortraitModification
+	# Load the Gender
+	Gender = GetGender()
 	# Window
 	if IsPortraitModification:
 		AppearanceWindow = GemRB.LoadWindow(18, "GUIREC")
@@ -65,10 +67,6 @@ def OnLoad(PortraitModification = False):
 		}
 	else:
 		AppearanceWindow = GemRB.LoadWindow(11, "GUICG")
-
-	# Load the Gender
-	Gender = GetGender()
-	if not IsPortraitModification:
 		# Optional extra setup
 		if GameCheck.IsBG2OrEE() or GameCheck.IsBG2Demo():
 			import CharGenCommon
@@ -79,7 +77,7 @@ def OnLoad(PortraitModification = False):
 		elif GameCheck.IsIWD2():
 			import CharOverview
 			CharOverview.PositionCharGenWin(AppearanceWindow)
-		
+
 	# Load the Portraits table
 	PortraitsTable = GemRB.LoadTable("PICTURES")
 	if IsPortraitModification:
@@ -280,27 +278,38 @@ def PortraitApplySelection():
 	return PortraitName + PortraitSuffix["large"]
 
 # This is for the large and small custom portrait
-def PortraitCommonCustom(type = 'small'):
+def PortraitCommonCustom(Size ='small'):
 	global PortraitList1, PortraitList2
 	global RowCount1, RowCount2
 	global CustomWindow
 
 	Window = CustomWindow
-
-	Portrait = PortraitList1.QueryText() if 'medium' == type else PortraitList2.QueryText()
-
-	row_var = "Row1" if type == "medium" else "Row2"
-	row_count = RowCount1 if type == "medium" else RowCount2
+	if Size == 'medium':
+		Portrait = PortraitList1.QueryText()
+		RowVar = "Row1"
+		RowCount = RowCount1
+		LabelControl = 0x10000007
+		EmptyPortraitData = EmptyPortrait["medium"]
+		SecondPortraitValue = PortraitList2.QueryText()
+		PreviewControl = 0
+	else:
+		Portrait = PortraitList2.QueryText()
+		RowVar = "Row2"
+		RowCount = RowCount2
+		LabelControl = 0x10000008
+		EmptyPortraitData = EmptyPortrait["small"]
+		SecondPortraitValue = PortraitList1.QueryText()
+		PreviewControl = 1
+	
 	# small hack
-	if GemRB.GetVar(row_var) == row_count:
+	if GemRB.GetVar(RowVar) == RowCount:
 		return
 
 
-	Label = Window.GetControl(0x10000007 if 'medium' == type else 0x10000008)
+	Label = Window.GetControl(LabelControl)
 	Label.SetText(Portrait)
 
 	Button = Window.GetControl(WindowButtonPosition["CustomPortrait"])
-	EmptyPortraitData = EmptyPortrait["medium"] if 'medium' == type else EmptyPortrait["small"]
 	if Portrait == "":
 		Portrait = EmptyPortraitData
 		if IsPortraitModification:
@@ -310,7 +319,6 @@ def PortraitCommonCustom(type = 'small'):
 		else:
 			Button.SetState(IE_GUI_BUTTON_DISABLED)
 	else:
-		SecondPortraitValue = PortraitList2.QueryText() if 'medium' == type else PortraitList1.QueryText()
 		if SecondPortraitValue:
 			if IsPortraitModification:
 				Button.SetState(IE_GUI_BUTTON_ENABLED)
@@ -319,7 +327,7 @@ def PortraitCommonCustom(type = 'small'):
 			else:
 				Button.SetState(IE_GUI_BUTTON_ENABLED)
 
-	Preview = Window.GetControl(0 if 'medium' == type else 1)
+	Preview = Window.GetControl(PreviewControl)
 	Preview.SetPicture(Portrait, EmptyPortraitData)
 
 def PortraitCustomPress():
