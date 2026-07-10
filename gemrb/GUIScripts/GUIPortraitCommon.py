@@ -15,7 +15,7 @@ PortraitButton = 0
 PortraitsTable = 0
 LastPortrait = 0
 Gender = 0
-IsPortraitModification = False
+InGUIRECMode = False # are we in a running game or in chargen?
 
 EmptyPortrait = {
 	"big": "NOPORTLL" if GameCheck.IsAnyEE () else "NOPORTLG",
@@ -45,14 +45,14 @@ WindowButtonPosition = {
 
 def OnLoad(PortraitModification = False):
 	global AppearanceWindow, PortraitButton, PortraitsTable
-	global Gender, IsPortraitModification, WindowButtonPosition
+	global Gender, InGUIRECMode, WindowButtonPosition
 
-	IsPortraitModification = PortraitModification
+	InGUIRECMode = PortraitModification
 	# Load the Gender
 	Gender = GetGender()
 
 	# Window
-	if IsPortraitModification:
+	if InGUIRECMode:
 		AppearanceWindow = GemRB.LoadWindow(18, "GUIREC")
 		WindowButtonPosition = {
 			"Portrait": 0,
@@ -81,7 +81,7 @@ def OnLoad(PortraitModification = False):
 
 	# Load the Portraits table
 	PortraitsTable = GemRB.LoadTable("PICTURES")
-	if IsPortraitModification:
+	if InGUIRECMode:
 		CharacterPortrait()
 	else:
 		RandomPortrait()
@@ -104,7 +104,7 @@ def OnLoad(PortraitModification = False):
 	BackOrCancelButton = AppearanceWindow.GetControl(WindowButtonPosition["BackOrCancel"])
 	BackOrCancelButton.MakeEscape()
 	BackOrCancelButton.SetState(IE_GUI_BUTTON_ENABLED)
-	if IsPortraitModification:
+	if InGUIRECMode:
 		BackOrCancelButton.OnPress(AppearanceWindow.Close)
 		BackOrCancelButton.SetText(13727)
 	else:
@@ -121,7 +121,7 @@ def OnLoad(PortraitModification = False):
 	CustomButton.OnPress(PortraitCustomPress)
 
 	DoneButton = AppearanceWindow.GetControl(WindowButtonPosition["Done"])
-	if not IsPortraitModification and GameCheck.IsIWD2():
+	if not InGUIRECMode and GameCheck.IsIWD2():
 		DoneButton.SetText(36789)
 	else:
 		DoneButton.SetText(11973)
@@ -130,7 +130,7 @@ def OnLoad(PortraitModification = False):
 	DoneButton.OnPress(PortraitButtonNextPress)
 	PortraitSetPicture()
 	AppearanceWindow.Focus()
-	if IsPortraitModification or GameCheck.IsBG1OrEE():
+	if InGUIRECMode or GameCheck.IsBG1OrEE():
 		AppearanceWindow.ShowModal(MODAL_SHADOW_GRAY)
 	elif GameCheck.IsIWD1():
 		AppearanceWindow.ShowModal(MODAL_SHADOW_NONE)
@@ -170,7 +170,7 @@ def RandomPortrait():
 
 # Function for getting the gender.
 def GetGender():
-	Pc = GemRB.GameGetSelectedPCSingle() if IsPortraitModification else GemRB.GetVar("Slot")
+	Pc = GemRB.GameGetSelectedPCSingle() if InGUIRECMode else GemRB.GetVar("Slot")
 	return GemRB.GetPlayerStat(Pc, IE_SEX)
 
 # Button right press function	
@@ -196,7 +196,7 @@ def PortraitButtonNextPress():
 	PortraitApplyName(PortraitName)
 
 def PortraitApplyName(PortraitName):
-	if not IsPortraitModification:
+	if not InGUIRECMode:
 		if GameCheck.IsBG1OrEE():
 			import CharGenCommon
 			CharGenCommon.next()
@@ -240,7 +240,7 @@ def SaveCustomPortrait():
 
 	PortraitLarge = PortraitList1.QueryText()
 	PortraitSmall = PortraitList2.QueryText()
-	if IsPortraitModification:
+	if InGUIRECMode:
 		Pc = GemRB.GameGetSelectedPCSingle()
 		GemRB.FillPlayerInfo(Pc, PortraitLarge, PortraitSmall)
 		return
@@ -257,7 +257,7 @@ def PortraitCustomAbort():
 	if CustomWindow:
 		CustomWindow.Close()
 
-	if not IsPortraitModification and AppearanceWindow:
+	if not InGUIRECMode and AppearanceWindow:
 		if GameCheck.IsBG1OrEE():
 			AppearanceWindow.ShowModal (MODAL_SHADOW_GRAY) # narrower than CustomWindow, so borders will remain
 		elif GameCheck.UsesBG2GUI ():
@@ -272,9 +272,9 @@ def PortraitApplySelection():
 	GemRB.SetToken("SmallPortrait", PortraitName + PortraitSuffix["small"])
 	GemRB.SetToken("LargePortrait", PortraitName + PortraitSuffix["large"])
 
-	if not IsPortraitModification and (GameCheck.IsIWD2() or GameCheck.UsesBG2GUI()):
+	if not InGUIRECMode and (GameCheck.IsIWD2() or GameCheck.UsesBG2GUI()):
 		GemRB.SetNextScript ("CharGen2") #Before race
-	if IsPortraitModification:
+	if InGUIRECMode:
 		Pc = GemRB.GameGetSelectedPCSingle()
 		GemRB.FillPlayerInfo(Pc, PortraitName + PortraitSuffix["large"], PortraitName + PortraitSuffix["small"])
 	return PortraitName + PortraitSuffix["large"]
@@ -313,14 +313,14 @@ def PortraitCommonCustom(Size ='small'):
 	Button = Window.GetControl(WindowButtonPosition["CustomPortrait"])
 	if Portrait == "":
 		Portrait = EmptyPortraitData
-		if IsPortraitModification:
+		if InGUIRECMode:
 			Button.SetState(IE_GUI_BUTTON_DISABLED)
 		elif GameCheck.UsesBG2GUI():
 			Button.SetDisabled(True)
 		else:
 			Button.SetState(IE_GUI_BUTTON_DISABLED)
 	elif SecondPortraitValue:
-		if IsPortraitModification:
+		if InGUIRECMode:
 			Button.SetState(IE_GUI_BUTTON_ENABLED)
 		elif GameCheck.UsesBG2GUI():
 			Button.SetDisabled(False)
@@ -336,7 +336,7 @@ def PortraitCustomPress():
 	global RowCount1, RowCount2
 	global CustomWindow
 
-	if IsPortraitModification:
+	if InGUIRECMode:
 		CustomWindow = Window = GemRB.LoadWindow(19, "GUIREC")
 	else:
 		CustomWindow = Window = GemRB.LoadWindow(18, "GUICG")
@@ -346,7 +346,7 @@ def PortraitCustomPress():
 	ButtonDone.MakeDefault()
 
 	ButtonDone.OnPress(PortraitButtonCustomDone)
-	if IsPortraitModification:
+	if InGUIRECMode:
 		ButtonDone.SetState(IE_GUI_BUTTON_DISABLED)
 	elif GameCheck.UsesBG2GUI():
 		ButtonDone.SetDisabled(True)
@@ -354,7 +354,7 @@ def PortraitCustomPress():
 		ButtonDone.SetState(IE_GUI_BUTTON_DISABLED)
 
 	ButtonCancel = Window.GetControl(WindowButtonPosition["CustomCancel"])
-	if IsPortraitModification:
+	if InGUIRECMode:
 		ButtonCancel.SetText(13727)
 		ButtonCancel.MakeEscape()
 		ButtonCancel.SetState(IE_GUI_BUTTON_ENABLED)
@@ -363,7 +363,7 @@ def PortraitCustomPress():
 	ButtonCancel.MakeEscape()
 	ButtonCancel.OnPress(PortraitCustomAbort)
 
-	if IsPortraitModification:
+	if InGUIRECMode:
 		if not GameCheck.IsIWD1():
 			SmallPortraitButton = Window.GetControl(1)
 			SmallPortraitButton.SetFlags(IE_GUI_BUTTON_PICTURE | IE_GUI_BUTTON_NO_IMAGE, OP_SET)
@@ -394,7 +394,7 @@ def PortraitCustomPress():
 	PortraitList2.SetVarAssoc("Row2", RowCount2)
 
 	ModalShadow = MODAL_SHADOW_NONE
-	if IsPortraitModification or GameCheck.IsBG1OrEE():
+	if InGUIRECMode or GameCheck.IsBG1OrEE():
 		ModalShadow = MODAL_SHADOW_GRAY
 	Window.ShowModal(ModalShadow)
 
