@@ -315,14 +315,14 @@ def PortraitCommonCustom(Size ='small'):
 		Portrait = EmptyPortraitData
 		if IsPortraitModification:
 			Button.SetState(IE_GUI_BUTTON_DISABLED)
-		elif GameCheck.IsBG2OrEE() or GameCheck.IsBG2Demo():
+		elif GameCheck.UsesBG2GUI():
 			Button.SetDisabled(True)
 		else:
 			Button.SetState(IE_GUI_BUTTON_DISABLED)
 	elif SecondPortraitValue:
 		if IsPortraitModification:
 			Button.SetState(IE_GUI_BUTTON_ENABLED)
-		elif GameCheck.IsBG2OrEE() or GameCheck.IsBG2Demo():
+		elif GameCheck.UsesBG2GUI():
 			Button.SetDisabled(False)
 		else:
 			Button.SetState(IE_GUI_BUTTON_ENABLED)
@@ -348,7 +348,7 @@ def PortraitCustomPress():
 	ButtonDone.OnPress(PortraitButtonCustomDone)
 	if IsPortraitModification:
 		ButtonDone.SetState(IE_GUI_BUTTON_DISABLED)
-	elif GameCheck.IsBG2OrEE() or GameCheck.IsBG2Demo():
+	elif GameCheck.UsesBG2GUI():
 		ButtonDone.SetDisabled(True)
 	else:
 		ButtonDone.SetState(IE_GUI_BUTTON_DISABLED)
