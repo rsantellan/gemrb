@@ -307,7 +307,6 @@ def PortraitCommonCustom(Size ='small'):
 	if GemRB.GetVar(RowVar) == RowCount:
 		return
 
-
 	Label = Window.GetControl(LabelControl)
 	Label.SetText(Portrait)
 
@@ -320,14 +319,13 @@ def PortraitCommonCustom(Size ='small'):
 			Button.SetDisabled(True)
 		else:
 			Button.SetState(IE_GUI_BUTTON_DISABLED)
-	else:
-		if SecondPortraitValue:
-			if IsPortraitModification:
-				Button.SetState(IE_GUI_BUTTON_ENABLED)
-			elif GameCheck.IsBG2OrEE() or GameCheck.IsBG2Demo():
-				Button.SetDisabled(False)
-			else:
-				Button.SetState(IE_GUI_BUTTON_ENABLED)
+	elif SecondPortraitValue:
+		if IsPortraitModification:
+			Button.SetState(IE_GUI_BUTTON_ENABLED)
+		elif GameCheck.IsBG2OrEE() or GameCheck.IsBG2Demo():
+			Button.SetDisabled(False)
+		else:
+			Button.SetState(IE_GUI_BUTTON_ENABLED)
 
 	Preview = Window.GetControl(PreviewControl)
 	Preview.SetPicture(Portrait, EmptyPortraitData)
